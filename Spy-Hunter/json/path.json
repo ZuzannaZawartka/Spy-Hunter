@@ -1,18 +1,18 @@
 [
-    {
-        "level": 0,
-        "image": "SpyHunterArea01.png",
-        "directionLeft": 1,
-        "directionRight": 2,
-        "collisionColors": [],
-        "roadsideColors": []
-    },
-    {
-        "level": 1,
-        "image": "SpyHunterArea02.png",
-        "directionLeft": 3,
-        "directionRight": 4,
-        "collisionColors": [],
-        "roadsideColors": []
-    }
+  {
+    "level": 0,
+    "image": "SpyHunterArea01.png",
+    "directionLeft": 1,
+    "directionRight": 2,
+    "collisionColors": [],
+    "roadsideColors": []
+  },
+  {
+    "level": 1,
+    "image": "SpyHunterArea02.png",
+    "directionLeft": 3,
+    "directionRight": 4,
+    "collisionColors": [],
+    "roadsideColors": []
+  }
 ]

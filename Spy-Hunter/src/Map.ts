@@ -1,11 +1,10 @@
 import { size } from "./interfaces";
 export default class Map implements size {
+  width: number;
+  height: number;
 
-    width: number;
-    heigth: number;
-
-    constructor(width: number, heigth: number) {
-        this.width = width
-        this.heigth = heigth
-    }
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+  }
 }

@@ -1,15 +1,11 @@
 interface size {
-    width: number;
-    height: number;
+  width?: number;
+  height?: number;
 }
 
-interface arrayOfControls {
-    UP: string[];
-    DOWN: string[];
-    RIGHT: string[];
-    LEFT: string[];
-    SHOOT1: string[];
-    SHOOT2: string[];
+interface coords {
+  x: number;
+  y: number;
 }
 
-export type { size, arrayOfControls };
+export type { size, coords };

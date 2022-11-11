@@ -1,3 +1,1 @@
-export default class Enemy {
-
-}
+export default class Enemy {}

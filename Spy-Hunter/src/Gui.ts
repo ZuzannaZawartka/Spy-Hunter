@@ -1,3 +1,1 @@
-export default class Gui {
-
-}
+export default class Gui {}

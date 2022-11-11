@@ -6,12 +6,12 @@
   /* Hide vertical scrollbar */
   overflow-x: hidden;
   border: 1px solid;
-
-
 }
-
-
 
 canvas {
   display: block;
+}
+
+#playerImage {
+  display: none;
 }

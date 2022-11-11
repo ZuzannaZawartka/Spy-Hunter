@@ -1,11 +1,9 @@
-import './style.css'
-import Game from "./Game"
+import "./style.css";
+import Game from "./Game";
 
-
-
-window.addEventListener('load', () => {
-  let x = new Game(600, 600)
-})
+window.addEventListener("load", () => {
+  let x = new Game(800, 720, 80, 100);
+});
 // var ctx = document.getElementById("canvas")!.getContext("2d"),
 
 //   canvasTemp = document.createElement("canvas"),
@@ -21,7 +19,6 @@ window.addEventListener('load', () => {
 //   driven = 0,
 //   speed = 10,
 //   imgScale = 3;
-
 
 // scrollImg.src = "../graphics/SpyHunterArea01.png";
 // scrollImg.onload = loadImage;
@@ -47,17 +44,13 @@ window.addEventListener('load', () => {
 //   console.log(RED + "," + GREEN + "," + BLUE, "")
 // })
 
-
 // function render() {
 
 //   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-
-
 //   if (scrollVal >= imgHeight - canvasHeight) {
 //     scrollVal = 0;
 //   }
-
 
 //   scrollVal += speed;
 
