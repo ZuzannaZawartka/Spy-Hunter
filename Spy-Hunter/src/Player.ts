@@ -1,11 +1,11 @@
 import Game from "./Game";
-import playerImageUrl from "../graphics/car.png";
 import { coords } from "./interfaces";
 
 export default class Player {
   size: coords;
   position: coords;
   speed: number;
+  maxSpeed: number;
   moves: Set<String>;
   game: Game;
   constructor(width: number, height: number, game: Game) {
@@ -13,6 +13,7 @@ export default class Player {
     (this.position = { x: 0, y: this.game.gameHeight - this.size.y }),
       (this.moves = new Set());
     this.speed = 5;
+    this.maxSpeed = 40;
     this.resizePLayer();
   }
 
@@ -41,8 +42,32 @@ export default class Player {
   };
 
   update = () => {
-    this.position.x++;
-    // console.log(this.position);
+    // this.position.x += this.speed;
+    //horizontal movemnet
+    if (this.moves.has("UP")) {
+      if (this.position.y > this.game.maxPlayerArea)
+        this.position.y -= this.speed;
+
+      if (this.speed < this.maxSpeed) this.speed++;
+    }
+    if (this.moves.has("DOWN")) {
+      if (this.position.y < this.game.minPlayerArea)
+        this.position.y += this.speed;
+
+      if (this.speed > 0) this.speed--;
+    }
+
+    //vertical movement
+    if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
+      this.position.x -= this.speed;
+    }
+    if (
+      this.moves.has("RIGHT") &&
+      this.speed > 0 &&
+      this.position.x < this.game.gameWidth - this.game.playerWidth * 1.5
+    ) {
+      this.position.x += this.speed;
+    }
   };
 
   addMove(action: string) {

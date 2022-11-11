@@ -9,6 +9,8 @@ export default class Game {
   public gameHeight: number;
   public playerWidth: number;
   public playerHeight: number;
+  public maxPlayerArea: number;
+  public minPlayerArea: number;
 
   public points: number;
   public map: Map;
@@ -29,6 +31,8 @@ export default class Game {
     this.gameHeight = gameHeight;
     this.playerHeight = playerHeight;
     this.playerWidth = playerWidth;
+    this.maxPlayerArea = this.gameHeight / 2 - 2 * this.playerHeight;
+    this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
     this.points = 0;
 
     this.map = new Map(this.gameWidth, this.gameHeight);
