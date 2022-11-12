@@ -10,10 +10,10 @@ export default class Player {
   game: Game;
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
-    (this.position = { x: 0, y: this.game.gameHeight - this.size.y }),
+    (this.position = { x: 0, y: this.game.minPlayerArea - this.size.y }),
       (this.moves = new Set());
     this.speed = 5;
-    this.maxSpeed = 40;
+    this.maxSpeed = 30;
     this.resizePLayer();
   }
 
@@ -42,31 +42,30 @@ export default class Player {
   };
 
   update = () => {
-    // this.position.x += this.speed;
     //horizontal movemnet
-    if (this.moves.has("UP")) {
-      if (this.position.y > this.game.maxPlayerArea)
-        this.position.y -= this.speed;
-
-      if (this.speed < this.maxSpeed) this.speed++;
-    }
-    if (this.moves.has("DOWN")) {
-      if (this.position.y < this.game.minPlayerArea)
-        this.position.y += this.speed;
-
-      if (this.speed > 0) this.speed--;
+    if (this.moves.has("UP") || this.moves.has("DOWN")) {
+      this.position.y =
+        this.game.minPlayerArea -
+        (this.speed / this.maxSpeed) * this.game.maxPlayerArea;
+      if (this.moves.has("UP"))
+        if (this.speed < this.maxSpeed) this.speed += 0.25;
+      if (this.moves.has("DOWN")) if (this.speed > 0) this.speed -= 0.25;
     }
 
     //vertical movement
+    let turn =
+      ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
+      1.5;
+
     if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
-      this.position.x -= this.speed;
+      this.position.x -= turn;
     }
     if (
       this.moves.has("RIGHT") &&
       this.speed > 0 &&
       this.position.x < this.game.gameWidth - this.game.playerWidth * 1.5
     ) {
-      this.position.x += this.speed;
+      this.position.x += turn;
     }
   };
 

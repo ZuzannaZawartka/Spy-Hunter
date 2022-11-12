@@ -1,17 +1,23 @@
 #container {
-  width: 768px;
   overflow: hidden;
   overflow: auto;
   overflow-y: hidden;
   /* Hide vertical scrollbar */
   overflow-x: hidden;
   border: 1px solid;
+  z-index: 6;
 }
 
 canvas {
   display: block;
+  z-index: 4;
 }
 
 #playerImage {
   display: none;
+  z-index: 1;
+}
+#backgroundImage {
+  display: none;
+  z-index: 2;
 }
