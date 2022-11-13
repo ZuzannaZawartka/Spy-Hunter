@@ -13,7 +13,7 @@ export default class Player {
     (this.position = { x: 0, y: this.game.minPlayerArea - this.size.y }),
       (this.moves = new Set());
     this.speed = 5;
-    this.maxSpeed = 30;
+    this.maxSpeed = 80;
     this.resizePLayer();
   }
 

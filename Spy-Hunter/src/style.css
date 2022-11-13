@@ -16,6 +16,7 @@ canvas {
 #playerImage {
   display: none;
   z-index: 1;
+  background-color: rgba(255, 0, 0, 0.89);
 }
 #backgroundImage {
   display: none;

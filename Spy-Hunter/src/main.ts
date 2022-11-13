@@ -2,7 +2,7 @@ import "./style.css";
 import Game from "./Game";
 
 window.addEventListener("load", () => {
-  let x = new Game(1000, 900, 60, 80);
+  let x = new Game(1000, 900, 50, 80);
 });
 // var ctx = document.getElementById("canvas")!.getContext("2d"),
 

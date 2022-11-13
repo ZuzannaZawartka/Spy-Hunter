@@ -32,7 +32,7 @@
   {
     "level": 3,
     "image": "SpyHunterArea04.png",
-    "directionLeft": 7,
+    "directionLeft": 6,
     "directionRight": 4,
     "collisionColors": [],
     "roadsideColors": [],
@@ -42,8 +42,8 @@
   {
     "level": 4,
     "image": "SpyHunterArea05.png",
-    "directionLeft": 7,
-    "directionRight": 6,
+    "directionLeft": 6,
+    "directionRight": 7,
     "collisionColors": [],
     "roadsideColors": [],
     "width": 256,
@@ -53,7 +53,7 @@
     "level": 5,
     "image": "SpyHunterArea06.png",
     "directionLeft": 1,
-    "directionRight": 6,
+    "directionRight": 7,
     "collisionColors": [],
     "roadsideColors": [],
     "width": 256,

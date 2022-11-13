@@ -61,22 +61,16 @@ export default class Background {
   setNewBackground = () => {
     document.getElementById("backgroundImage")!.src =
       "./graphics/" + this.background?.image;
-
-    console.log(this.background?.image);
   };
 
   checkDirection = () => {
-    console.log(this.position.x);
     if (this.game.player.position.x < this.background!.width / 2) {
       this.game.level = this.background!.directionLeft;
     } else {
       this.game.level = this.background!.directionRight;
     }
-
     this.refreshBackgroundData();
     this.setNewBackground();
-    console.log("LEVEL " + this.game.level);
-    console.log(this.background);
 
     //  if(this.position.x < this.background!.width/2)
   };
@@ -87,10 +81,6 @@ export default class Background {
       this.checkDirection();
 
       console.log("LEVBE; " + this.game.level);
-      console.log("GRATUL;ACJE NOWY LVL");
     }
-
-    console.log("LEVBE; " + this.game.level);
-    // this.image = document.getElementById("backgroundImage") ;
   };
 }
