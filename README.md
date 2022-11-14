@@ -1,8 +1,6 @@
 # SPY HUNTER
 ## _Replica of the game from Atari 8bit_
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
 SPY HUNTER is game based on vehicular combat action game developed by Bally Midway.
 
 - Type some Commands
@@ -12,8 +10,8 @@ SPY HUNTER is game based on vehicular combat action game developed by Bally Midw
 ## Tech
 
 Game built using:
-- [Typescript] - HTML enhanced for web apps!
-- [Vite.js] - awesome web-based text editor
+- [Typescript] - Typed programming language
+- [Vite.js] - Frontend Tool
 
 ## Installation
 
