@@ -1,4 +1,5 @@
 import Game from "./Game";
+import Collision from "./Collision";
 import { coords } from "./interfaces";
 
 export default class Player {
@@ -6,14 +7,20 @@ export default class Player {
   position: coords;
   speed: number;
   maxSpeed: number;
+  maxVibrations: number;
+  lastSignVibration: number;
   moves: Set<String>;
   game: Game;
+  collision: Collision;
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
-    (this.position = { x: 0, y: this.game.minPlayerArea - this.size.y }),
+    (this.position = { x: 200, y: this.game.minPlayerArea - this.size.y }),
       (this.moves = new Set());
+    this.collision = new Collision(this);
     this.speed = 5;
     this.maxSpeed = 80;
+    this.maxVibrations = 8;
+    this.lastSignVibration = 1;
     this.resizePLayer();
   }
 
@@ -23,15 +30,21 @@ export default class Player {
     player!.style.height = this.size.y + "px";
   };
 
-  //context: CanvasRenderingContext2D
+  addMove(action: string) {
+    this.moves.add(action);
+  }
+  removeMove(action: string) {
+    this.moves.delete(action);
+  }
+
+  simulateVibrations = () => {
+    if (this.lastSignVibration > 0) this.position.x += -this.maxVibrations;
+    else this.position.x += this.maxVibrations;
+    this.lastSignVibration = -this.lastSignVibration;
+  };
+
   draw = (context: CanvasRenderingContext2D) => {
-    context.fillStyle = "black";
-    context.fillRect(
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
-    );
+    this.collision.checkCollision(context);
     context.drawImage(
       document.getElementById("playerImage") as CanvasImageSource,
       this.position.x,
@@ -68,11 +81,4 @@ export default class Player {
       this.position.x += turn;
     }
   };
-
-  addMove(action: string) {
-    this.moves.add(action);
-  }
-  removeMove(action: string) {
-    this.moves.delete(action);
-  }
 }

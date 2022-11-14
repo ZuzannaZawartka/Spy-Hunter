@@ -27,8 +27,6 @@ export default class Control {
       move != undefined
         ? this.game.player.addMove(move)
         : console.log("Brak ruchu");
-
-      console.log(this.game.player.moves);
     });
 
     //if buttons are released

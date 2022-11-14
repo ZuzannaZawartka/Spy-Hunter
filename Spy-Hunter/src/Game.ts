@@ -12,6 +12,7 @@ export default class Game {
   public maxPlayerArea: number;
   public minPlayerArea: number;
 
+  public pause: boolean;
   public points: number;
   public level: number;
   public background: Background;
@@ -36,6 +37,7 @@ export default class Game {
     this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
     this.points = 0;
     this.level = 0;
+    this.pause = false;
 
     this.background = new Background(this);
     this.player = new Player(this.playerWidth, this.playerHeight, this);
@@ -51,12 +53,14 @@ export default class Game {
   };
 
   animate = () => {
-    this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
-    this.background.draw(this.context);
-    this.background.update();
-    this.player.draw(this.context!);
-    this.player.update();
+    if (!this.pause) {
+      this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
+      this.background.draw(this.context);
+      this.background.update();
+      this.player.draw(this.context!);
+      this.player.update();
 
-    requestAnimationFrame(this.animate);
+      requestAnimationFrame(this.animate);
+    }
   };
 }
