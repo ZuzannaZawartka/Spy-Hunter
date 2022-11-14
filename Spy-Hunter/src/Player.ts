@@ -9,6 +9,7 @@ export default class Player {
   maxSpeed: number;
   maxVibrations: number;
   lastSignVibration: number;
+  isActive: boolean;
   moves: Set<String>;
   game: Game;
   collision: Collision;
@@ -21,6 +22,7 @@ export default class Player {
     this.maxSpeed = 80;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
+    this.isActive = true;
     this.resizePLayer();
   }
 
@@ -28,6 +30,12 @@ export default class Player {
     let player = document.getElementById("playerImage");
     player!.style.width = this.size.x + "px";
     player!.style.height = this.size.y + "px";
+  };
+
+  death = () => {
+    //animacje dorobimy ze tak buch robi
+    this.isActive = false;
+    this.game.isGameplay = false;
   };
 
   addMove(action: string) {
@@ -55,30 +63,32 @@ export default class Player {
   };
 
   update = () => {
-    //horizontal movemnet
-    if (this.moves.has("UP") || this.moves.has("DOWN")) {
-      this.position.y =
-        this.game.minPlayerArea -
-        (this.speed / this.maxSpeed) * this.game.maxPlayerArea;
-      if (this.moves.has("UP"))
-        if (this.speed < this.maxSpeed) this.speed += 0.25;
-      if (this.moves.has("DOWN")) if (this.speed > 0) this.speed -= 0.25;
-    }
+    if (this.isActive) {
+      //horizontal movemnet
+      if (this.moves.has("UP") || this.moves.has("DOWN")) {
+        this.position.y =
+          this.game.minPlayerArea -
+          (this.speed / this.maxSpeed) * this.game.maxPlayerArea;
+        if (this.moves.has("UP"))
+          if (this.speed < this.maxSpeed) this.speed += 0.25;
+        if (this.moves.has("DOWN")) if (this.speed > 0) this.speed -= 0.25;
+      }
 
-    //vertical movement
-    let turn =
-      ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
-      1.5;
+      //vertical movement
+      let turn =
+        ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
+        1.5;
 
-    if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
-      this.position.x -= turn;
-    }
-    if (
-      this.moves.has("RIGHT") &&
-      this.speed > 0 &&
-      this.position.x < this.game.gameWidth - this.game.playerWidth * 1.5
-    ) {
-      this.position.x += turn;
+      if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
+        this.position.x -= turn;
+      }
+      if (
+        this.moves.has("RIGHT") &&
+        this.speed > 0 &&
+        this.position.x < this.game.gameWidth - this.game.playerWidth * 1.5
+      ) {
+        this.position.x += turn;
+      }
     }
   };
 }

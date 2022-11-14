@@ -4,10 +4,13 @@ import Player from "./Player";
 
 export default class Collision {
   playerCollisionPoints: { x: number; y: number }[];
+  collisionDifferenceLimit: number;
   player: Player;
+
   constructor(player: Player) {
     this.player = player;
     this.playerCollisionPoints = [];
+    this.collisionDifferenceLimit = 30;
   }
 
   refreshCollisionPoints = (position: coords, size: coords) => {
@@ -32,7 +35,17 @@ export default class Collision {
   };
 
   checkCollision = (context: CanvasRenderingContext2D) => {
-    this.refreshCollisionPoints(this.player.position, this.player.size);
+    //refreshing collision points for smaller rectangle to have worst sensitivity
+    this.refreshCollisionPoints(
+      {
+        x: this.player.position.x + this.collisionDifferenceLimit,
+        y: this.player.position.y - this.collisionDifferenceLimit,
+      },
+      {
+        x: this.player.size.x - 2 * this.collisionDifferenceLimit,
+        y: this.player.size.y - 2 * this.collisionDifferenceLimit,
+      }
+    );
 
     //pick every point of collison
     this.playerCollisionPoints.forEach((collisionPoint) => {
@@ -54,6 +67,7 @@ export default class Collision {
         if (collisonGroup != undefined) {
           if (collisonGroup.action == "vibrations")
             this.player.simulateVibrations();
+          if (collisonGroup.action == "death") this.player.death();
         }
       }
     });
