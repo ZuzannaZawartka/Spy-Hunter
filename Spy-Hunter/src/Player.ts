@@ -7,6 +7,7 @@ export default class Player {
   position: coords;
   speed: number;
   maxSpeed: number;
+  playerEnvironment: number;
   maxVibrations: number;
   lastSignVibration: number;
   isActive: boolean;
@@ -23,6 +24,7 @@ export default class Player {
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
     this.isActive = true;
+    this.playerEnvironment = 150;
     this.resizePLayer();
   }
 
@@ -80,6 +82,8 @@ export default class Player {
         1.5;
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
+        console.log(this.position);
+        this.game.background.getRoadStartEndPoints(0);
         this.position.x -= turn;
       }
       if (

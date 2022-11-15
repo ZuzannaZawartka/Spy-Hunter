@@ -1,6 +1,7 @@
-import { coords } from "./interfaces";
+import { coords, color } from "./interfaces";
 import paths from "../json/path.json";
 import Game from "./Game";
+import { collisionColors } from "./config";
 export default class Background {
   game: Game;
   position: coords;
@@ -36,9 +37,59 @@ export default class Background {
     this.refreshBackgroundData();
   };
 
+  checkPixelStrike = (pointsArray: Uint8ClampedArray[], color: color) => {
+    let counter = 0;
+
+    pointsArray.forEach((point) => {
+      if (
+        point[0] == color.RED &&
+        point[1] == color.GREEN &&
+        point[2] == color.BLUE
+      )
+        counter++;
+    });
+
+    return counter;
+  };
+
+  getRoadStartEndPoints = (cordY: number) => {
+    let startPoint = undefined;
+    let endPoint = undefined;
+    let pointsArray = [];
+    let color = collisionColors.find((color) => color.ground == "road");
+    for (let pixel = 0; pixel < this.game.gameWidth; pixel++) {
+      let data = this.game.context.getImageData(pixel, cordY, 3, 1).data;
+
+      pointsArray.push(data);
+
+      if (pointsArray.length >= 3 * this.game.player.maxVibrations) {
+        if (
+          this.checkPixelStrike(pointsArray, color!) >=
+            2 * this.game.player.maxVibrations &&
+          startPoint == undefined &&
+          this.game.player.position.x - pixel <
+            this.game.player.playerEnvironment
+        ) {
+          startPoint = pixel;
+          pointsArray = [];
+        } else if (startPoint != undefined) {
+          if (
+            this.checkPixelStrike(pointsArray, color!) <
+              2 * this.game.player.maxVibrations &&
+            endPoint == undefined
+          ) {
+            endPoint = pixel;
+          }
+        }
+        pointsArray = [];
+      }
+    }
+    console.log(startPoint, endPoint);
+    return { startPoint, endPoint };
+  };
+
   refreshBackgroundData = () => {
     this.background = paths.find((e) => e.level == this.game.level);
-    console.log("ODSWIEZENIE BAC KGROUNDU NA LVL" + this.game.level);
     this.scale = this.game.gameWidth / this.background!.width;
     this.background!.width *= this.scale;
     this.background!.height *= this.scale;
@@ -71,16 +122,12 @@ export default class Background {
     }
     this.refreshBackgroundData();
     this.setNewBackground();
-
-    //  if(this.position.x < this.background!.width/2)
   };
 
   update = () => {
     this.position.y += this.game.player.speed;
     if (this.position.y >= 0) {
       this.checkDirection();
-
-      console.log("LEVBE; " + this.game.level);
     }
   };
 }

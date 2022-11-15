@@ -1,5 +1,7 @@
 import Background from "./Background";
 import Control from "./Control";
+import Obstacle from "./Obstacle";
+import Obstacles from "./Obstacles";
 import Player from "./Player";
 
 export default class Game {
@@ -19,6 +21,7 @@ export default class Game {
   public background: Background;
   public player: Player;
   public control: Control;
+  public obstacles: Obstacles;
 
   constructor(
     gameWidth: number,
@@ -44,7 +47,8 @@ export default class Game {
     this.background = new Background(this);
     this.player = new Player(this.playerWidth, this.playerHeight, this);
     this.control = new Control(this);
-
+    this.obstacles = new Obstacles(this);
+    this.obstacles.generatePuddle();
     this.init();
   }
 
@@ -58,8 +62,15 @@ export default class Game {
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();
+
+    this.obstacles.update();
     this.player.draw(this.context!);
     this.player.update();
     if (this.isGameplay) requestAnimationFrame(this.animate);
+
+    // this.x.draw();
+    // this.x.update();
+    // console.log(this.x);
+    // console.log(this.player.position);
   };
 }
