@@ -47,6 +47,17 @@ export default class Player {
     this.moves.delete(action);
   }
 
+  checkTypeOfGroundUnderPlayer = () => {
+    const data = this.game.context.getImageData(
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y
+    ).data;
+
+    return this.collision.checkTypeOfCollision(data);
+  };
+
   simulateVibrations = () => {
     if (this.lastSignVibration > 0) this.position.x += -this.maxVibrations;
     else this.position.x += this.maxVibrations;
@@ -65,6 +76,7 @@ export default class Player {
   };
 
   update = () => {
+    this.checkTypeOfGroundUnderPlayer();
     if (this.isActive) {
       //horizontal movemnet
       if (this.moves.has("UP") || this.moves.has("DOWN")) {
@@ -83,7 +95,7 @@ export default class Player {
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
         //console.log(this.position);
-        //this.game.background.getRoadStartEndPoints(0);
+        this.game.background.getRoadStartEndPoints(0);
         this.position.x -= turn;
       }
       if (
@@ -93,6 +105,9 @@ export default class Player {
       ) {
         this.position.x += turn;
       }
+      this.game.distance += this.speed; // distance counting to points
+
+      this.game.addPoints();
     }
   };
 }

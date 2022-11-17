@@ -16,8 +16,6 @@ export default class Obstacle {
     this.img.src = imgSrc;
   }
 
-
-
   draw = () => {
     this.game.context.drawImage(
       this.img,
