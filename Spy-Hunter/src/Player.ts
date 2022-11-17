@@ -82,8 +82,8 @@ export default class Player {
         1.5;
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
-        console.log(this.position);
-        this.game.background.getRoadStartEndPoints(0);
+        //console.log(this.position);
+        //this.game.background.getRoadStartEndPoints(0);
         this.position.x -= turn;
       }
       if (

@@ -16,11 +16,7 @@ export default class Obstacle {
     this.img.src = imgSrc;
   }
 
-  getCoordsOnRoad = () => {
-    let x = Math.floor(Math.random() * this.game.gameWidth);
-    let y = this.game.player.position.y - 1000;
-    let data = context.getImageData(x, y, 2, 2).data;
-  };
+
 
   draw = () => {
     this.game.context.drawImage(

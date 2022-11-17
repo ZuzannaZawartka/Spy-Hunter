@@ -63,7 +63,7 @@ export default class Game {
     this.background.draw(this.context);
     this.background.update();
 
-    this.obstacles.update();
+    //this.obstacles.update();
     this.player.draw(this.context!);
     this.player.update();
     if (this.isGameplay) requestAnimationFrame(this.animate);
