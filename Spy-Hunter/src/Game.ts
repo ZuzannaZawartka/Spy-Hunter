@@ -1,5 +1,7 @@
 import Background from "./Background";
+import Collision from "./Collision";
 import Control from "./Control";
+import Gui from "./Gui";
 import Obstacles from "./Obstacles";
 import Player from "./Player";
 
@@ -14,7 +16,7 @@ export default class Game {
   public minPlayerArea: number;
 
   public isGameplay: boolean; //czy byl death czy nie jesli tak to zatrzymanie
-  public pause: boolean; //pauza
+  public isPause: boolean; //pauza
   public points: number;
   public level: number;
   public distance: number;
@@ -25,6 +27,8 @@ export default class Game {
   public player: Player;
   public control: Control;
   public obstacles: Obstacles;
+  public collision: Collision;
+  public gui: Gui;
 
   constructor(
     gameWidth: number,
@@ -48,13 +52,15 @@ export default class Game {
     this.points = 0;
     this.distance = 0;
     this.level = 0;
-    this.pause = false;
+    this.isPause = false;
     this.isGameplay = true;
 
     this.background = new Background(this);
     this.player = new Player(this.playerWidth, this.playerHeight, this);
     this.control = new Control(this);
+    this.collision = new Collision(this);
     this.obstacles = new Obstacles(this);
+    this.gui = new Gui(this);
     this.init();
   }
 
@@ -62,6 +68,17 @@ export default class Game {
     document.getElementById("container")!.style.width = this.gameWidth + "px";
     document.getElementById("container")!.style.height = this.gameHeight + "px";
     this.animate();
+  };
+
+  start = () => {
+    // this.isGameplay = true;
+    // this.gui.hideMenu();
+    // this.animate();
+  };
+
+  pause = () => {
+    // this.isPause = true;
+    // this.animate();
   };
 
   addPoints = () => {
@@ -74,7 +91,7 @@ export default class Game {
       this.distance = 0;
 
       if ((this.points % 100) * this.points == 0)
-        this.obstacles.generatePuddle({ x: 100, y: 60 });
+        this.obstacles.generatePuddle();
     }
   };
 
@@ -83,15 +100,10 @@ export default class Game {
     this.background.draw(this.context);
     this.background.update();
 
-    this.obstacles.update();
+    this.obstacles.update(); //paddles,grenade etc.
 
     this.player.draw(this.context!);
     this.player.update();
     if (this.isGameplay) requestAnimationFrame(this.animate);
-
-    // this.x.draw();
-    // this.x.update();
-    // console.log(this.x);
-    // console.log(this.player.position);
   };
 }

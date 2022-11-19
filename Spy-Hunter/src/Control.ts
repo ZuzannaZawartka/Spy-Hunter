@@ -24,6 +24,7 @@ export default class Control {
     //if buttons are pressed
     window.addEventListener("keydown", (event) => {
       let move: string | undefined = this.findAction(event);
+      console.log(event);
       move != undefined
         ? this.game.player.addMove(move)
         : console.log("Brak ruchu");

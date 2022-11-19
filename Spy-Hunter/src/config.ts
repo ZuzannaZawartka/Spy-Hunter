@@ -7,6 +7,11 @@ const keymap = [
   { action: "SHOOT2", keys: ["Control"] },
 ];
 
+const keymapAction = [
+  { action: "START", keys: ["Control"] },
+  { action: "PAUSE", keys: ["Escape"] },
+];
+
 const collisionColors = [
   { id: 1, ground: "road", RED: 116, GREEN: 116, BLUE: 116 },
   { id: 2, ground: "roadside", RED: 252, GREEN: 152, BLUE: 56 },
@@ -17,11 +22,38 @@ const collisionColors = [
   { id: 7, ground: "water1", RED: 60, GREEN: 188, BLUE: 252 },
   { id: 8, ground: "water2", RED: 0, GREEN: 112, BLUE: 236 },
   { id: 9, ground: "bridge", RED: 188, GREEN: 188, BLUE: 188 },
+  { id: 10, ground: "paddle", RED: 76, GREEN: 98, BLUE: 218 },
 ];
 
 const colorsCollisionGroups = [
   { id: 1, action: "noCollision", colors: [1, 7, 8] },
   { id: 2, action: "vibrations", colors: [2, 3] },
   { id: 3, action: "death", colors: [4, 5, 6, 9] },
+  { id: 4, action: "skid", colors: [10] },
 ];
-export { keymap, collisionColors, colorsCollisionGroups };
+
+const obstacles = [
+  {
+    id: 1,
+    type: "paddle",
+    imgSrc: "./graphics/obstacles/puddle.png",
+    afterCollisionImgSrc: "./graphics/obstacles/puddle2.png",
+    width: 80,
+    height: 40,
+  },
+  {
+    id: 2,
+    type: "granade",
+    imgSrc: "./graphics/obstacles/granade.png",
+    afterCollisionImgSrc: "./graphics/obstacles/granade.png",
+    width: 60,
+    height: 36,
+  },
+];
+export {
+  keymap,
+  collisionColors,
+  colorsCollisionGroups,
+  obstacles,
+  keymapAction,
+};

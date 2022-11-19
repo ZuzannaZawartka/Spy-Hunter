@@ -1,30 +1,27 @@
 import Game from "./Game";
-import Collision from "./Collision";
-import { coords } from "./interfaces";
+import Vehicle from "./Vehicle";
 
-export default class Player {
-  size: coords;
-  position: coords;
-  speed: number;
+export default class Player extends Vehicle {
   maxSpeed: number;
-  playerEnvironment: number;
   maxVibrations: number;
+  acceleration: number;
+  turnDelay: number;
   lastSignVibration: number;
+  speed: number;
   isActive: boolean;
   moves: Set<String>;
-  game: Game;
-  collision: Collision;
+
   constructor(width: number, height: number, game: Game) {
-    (this.size = { x: width, y: height }), (this.game = game);
-    (this.position = { x: 200, y: this.game.minPlayerArea - this.size.y }),
-      (this.moves = new Set());
-    this.collision = new Collision(this);
+    super(width, height, game);
+    this.moves = new Set();
     this.speed = 5;
-    this.maxSpeed = 80;
+    this.maxSpeed = 30;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
     this.isActive = true;
-    this.playerEnvironment = 150;
+    this.acceleration = 0.3;
+    this.turnDelay = 50;
+
     this.resizePLayer();
   }
 
@@ -34,12 +31,6 @@ export default class Player {
     player!.style.height = this.size.y + "px";
   };
 
-  death = () => {
-    //animacje dorobimy ze tak buch robi
-    this.isActive = false;
-    this.game.isGameplay = false;
-  };
-
   addMove(action: string) {
     this.moves.add(action);
   }
@@ -47,25 +38,14 @@ export default class Player {
     this.moves.delete(action);
   }
 
-  checkTypeOfGroundUnderPlayer = () => {
-    const data = this.game.context.getImageData(
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
-    ).data;
-
-    return this.collision.checkTypeOfCollision(data);
-  };
-
-  simulateVibrations = () => {
-    if (this.lastSignVibration > 0) this.position.x += -this.maxVibrations;
-    else this.position.x += this.maxVibrations;
-    this.lastSignVibration = -this.lastSignVibration;
-  };
-
   draw = (context: CanvasRenderingContext2D) => {
-    this.collision.checkCollision(context);
+    this.playerCollisionPoints = this.game.collision.checkCollision(
+      this.playerCollisionPoints,
+      context,
+      this.position,
+      this.size
+    );
+
     context.drawImage(
       document.getElementById("playerImage") as CanvasImageSource,
       this.position.x,
@@ -76,7 +56,6 @@ export default class Player {
   };
 
   update = () => {
-    this.checkTypeOfGroundUnderPlayer();
     if (this.isActive) {
       //horizontal movemnet
       if (this.moves.has("UP") || this.moves.has("DOWN")) {
@@ -84,26 +63,30 @@ export default class Player {
           this.game.minPlayerArea -
           (this.speed / this.maxSpeed) * this.game.maxPlayerArea;
         if (this.moves.has("UP"))
-          if (this.speed < this.maxSpeed) this.speed += 0.25;
-        if (this.moves.has("DOWN")) if (this.speed > 0) this.speed -= 0.25;
+          if (this.speed < this.maxSpeed) this.speed += this.acceleration;
+        if (this.moves.has("DOWN"))
+          if (this.speed > 0) this.speed -= this.acceleration;
+          else this.speed = 0;
       }
 
       //vertical movement
       let turn =
         ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
-        1.5;
+        2.5;
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
-        //console.log(this.position);
-        this.game.background.getRoadStartEndPoints(0);
-        this.position.x -= turn;
+        setTimeout(() => {
+          this.position.x -= turn;
+        }, this.turnDelay);
       }
       if (
         this.moves.has("RIGHT") &&
         this.speed > 0 &&
         this.position.x < this.game.gameWidth - this.game.playerWidth * 1.5
       ) {
-        this.position.x += turn;
+        setTimeout(() => {
+          this.position.x += turn;
+        }, this.turnDelay);
       }
       this.game.distance += this.speed; // distance counting to points
 
