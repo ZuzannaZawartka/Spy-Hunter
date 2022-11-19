@@ -29,6 +29,7 @@ export default class Game {
   public obstacles: Obstacles;
   public collision: Collision;
   public gui: Gui;
+  public animation: number | undefined;
 
   constructor(
     gameWidth: number,
@@ -53,7 +54,8 @@ export default class Game {
     this.distance = 0;
     this.level = 0;
     this.isPause = false;
-    this.isGameplay = true;
+    this.isGameplay = false;
+    this.animation = undefined;
 
     this.background = new Background(this);
     this.player = new Player(this.playerWidth, this.playerHeight, this);
@@ -67,18 +69,21 @@ export default class Game {
   init = () => {
     document.getElementById("container")!.style.width = this.gameWidth + "px";
     document.getElementById("container")!.style.height = this.gameHeight + "px";
-    this.animate();
+    // this.animate();
   };
 
   start = () => {
-    // this.isGameplay = true;
-    // this.gui.hideMenu();
-    // this.animate();
+    console.log("stat");
+    this.isGameplay = true;
+    this.gui.hideMenu();
+    this.animate();
   };
 
   pause = () => {
-    // this.isPause = true;
-    // this.animate();
+    this.isPause = !this.isPause;
+    console.log("PAUZA");
+    if (!this.isPause) this.animate();
+    else cancelAnimationFrame(this.animation!);
   };
 
   addPoints = () => {
@@ -90,7 +95,7 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 100) * this.points == 0)
+      if ((this.points % 10) * this.points == 0)
         this.obstacles.generatePuddle();
     }
   };
@@ -104,6 +109,8 @@ export default class Game {
 
     this.player.draw(this.context!);
     this.player.update();
-    if (this.isGameplay) requestAnimationFrame(this.animate);
+    if (this.isGameplay) {
+      this.animation = requestAnimationFrame(this.animate);
+    }
   };
 }

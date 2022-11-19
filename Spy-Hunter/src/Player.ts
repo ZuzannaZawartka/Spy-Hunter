@@ -15,11 +15,11 @@ export default class Player extends Vehicle {
     super(width, height, game);
     this.moves = new Set();
     this.speed = 5;
-    this.maxSpeed = 30;
+    this.maxSpeed = 40;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
     this.isActive = true;
-    this.acceleration = 0.3;
+    this.acceleration = 0.4;
     this.turnDelay = 50;
 
     this.resizePLayer();
@@ -72,7 +72,7 @@ export default class Player extends Vehicle {
       //vertical movement
       let turn =
         ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
-        2.5;
+        2;
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
         setTimeout(() => {

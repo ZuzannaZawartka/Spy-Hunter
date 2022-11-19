@@ -61,13 +61,18 @@ export default class Vehicle {
   };
 
   skid = (element: Obstacle) => {
-    let posX = Math.floor(Math.random() * (5 + 3) + 3);
+    let posX = Math.floor(
+      Math.random() * (this.speed / 10 + this.maxVibrations / 2) +
+        this.maxVibrations / 2
+    );
+    this.isActive = false;
     for (let i = 0; i < this.speed; i++) {
       setTimeout(() => {
         if (element.sign < 0) this.position.x += posX / this.speed;
         else this.position.x -= posX / this.speed;
       }, 10);
     }
+    this.isActive = true;
   };
 
   draw = (context: CanvasRenderingContext2D) => {
