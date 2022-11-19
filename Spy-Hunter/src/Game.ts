@@ -89,6 +89,13 @@ export default class Game {
     this.animate();
   };
 
+  stop = () => {
+    this.isGameplay = false;
+    this.gui.showMenu();
+    clearInterval(this.timer);
+    this.init();
+  };
+
   pause = () => {
     this.isPause = !this.isPause;
     if (!this.isPause) {
@@ -103,6 +110,7 @@ export default class Game {
   noDeathTimer = () => {
     this.timer = setInterval(() => {
       this.timeNoDeath--;
+      console.log("interval");
       if (this.timeNoDeath <= 0) {
         clearInterval(this.timer);
         this.timeNoDeath = 0;

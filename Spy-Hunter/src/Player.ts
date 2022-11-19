@@ -44,10 +44,8 @@ export default class Player extends Vehicle {
 
   death = () => {
     //animacje dorobimy ze tak buch robi
-    if (this.game.isGameplay) this.game.gui.showMenu();
     this.isActive = false;
-    this.game.isGameplay = false;
-    this.game.init();
+    this.game.stop();
   };
 
   addMove(action: string) {

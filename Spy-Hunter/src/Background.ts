@@ -97,6 +97,7 @@ export default class Background {
       x: 0,
       y: -this.background!.height + this.game.gameHeight,
     };
+    this.setNewBackground();
   };
 
   draw = (context: CanvasRenderingContext2D) => {
@@ -121,7 +122,7 @@ export default class Background {
       this.game.level = this.background!.directionRight;
     }
     this.refreshBackgroundData();
-    this.setNewBackground();
+    //this.setNewBackground();
   };
 
   update = () => {

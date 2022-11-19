@@ -1,5 +1,4 @@
 import { collisionColors, colorsCollisionGroups } from "./config";
-import Enemy from "./Enemy";
 import Game from "./Game";
 import { coords } from "./interfaces";
 import Obstacle from "./Obstacle";
@@ -13,7 +12,7 @@ export default class Collision {
   constructor(game: Game) {
     this.player = game.player;
     this.game = game;
-    this.collisionDifferenceLimit = 0;
+    this.collisionDifferenceLimit = 15;
   }
 
   refreshCollisionPoints = (position: coords, size: coords) => {
