@@ -40,7 +40,7 @@ export default class Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
     this.isActive = false;
-    this.game.isGameplay = false;
+    //this.game.isGameplay = false;
   };
 
   checkTypeOfGroundUnderPlayer = () => {

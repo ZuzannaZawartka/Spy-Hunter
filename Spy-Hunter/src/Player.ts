@@ -25,10 +25,29 @@ export default class Player extends Vehicle {
     this.resizePLayer();
   }
 
+  reset = () => {
+    this.position = {
+      x: 300,
+      y:
+        this.game.minPlayerArea -
+        (this.speed / this.maxSpeed) * this.game.maxPlayerArea,
+    };
+    this.speed = 0;
+    this.isActive = true;
+  };
+
   resizePLayer = () => {
     let player = document.getElementById("playerImage");
     player!.style.width = this.size.x + "px";
     player!.style.height = this.size.y + "px";
+  };
+
+  death = () => {
+    //animacje dorobimy ze tak buch robi
+    if (this.game.isGameplay) this.game.gui.showMenu();
+    this.isActive = false;
+    this.game.isGameplay = false;
+    this.game.init();
   };
 
   addMove(action: string) {

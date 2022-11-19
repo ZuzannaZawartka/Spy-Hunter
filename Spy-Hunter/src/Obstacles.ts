@@ -13,6 +13,11 @@ export default class Obstacles {
     this.position = 0;
   }
 
+  reset = () => {
+    this.obstacles = [];
+    this.position = 0;
+  };
+
   generatePuddle = () => {
     let roadsPoints = this.game.background.getRoadStartEndPoints(this.position);
     let paddle = obstacles.find((obstacle) => obstacle.type == "paddle");

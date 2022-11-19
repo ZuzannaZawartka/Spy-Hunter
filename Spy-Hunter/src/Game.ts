@@ -58,7 +58,7 @@ export default class Game {
     this.animation = undefined;
 
     this.background = new Background(this);
-    this.player = new Player(this.playerWidth, this.playerHeight, this);
+    this.player = new Player(50, 80, this);
     this.control = new Control(this);
     this.collision = new Collision(this);
     this.obstacles = new Obstacles(this);
@@ -69,13 +69,19 @@ export default class Game {
   init = () => {
     document.getElementById("container")!.style.width = this.gameWidth + "px";
     document.getElementById("container")!.style.height = this.gameHeight + "px";
-    // this.animate();
+    this.player.reset();
+    this.obstacles.reset();
+    this.points = 0;
+    this.distance = 0;
+    this.level = 0;
+    this.isPause = false;
+    this.background?.init();
   };
 
   start = () => {
     console.log("stat");
     this.isGameplay = true;
-    this.gui.hideMenu();
+    this.gui!.hideMenu();
     this.animate();
   };
 
@@ -95,7 +101,7 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 10) * this.points == 0)
+      if ((this.points % 100) * this.points == 0)
         this.obstacles.generatePuddle();
     }
   };

@@ -16,11 +16,7 @@ export default class Collision {
     this.collisionDifferenceLimit = 0;
   }
 
-  refreshCollisionPoints = (
-    collisionPoints: { x: number; y: number }[],
-    position: coords,
-    size: coords
-  ) => {
+  refreshCollisionPoints = (position: coords, size: coords) => {
     position = {
       x: position.x + this.collisionDifferenceLimit,
       y: position.y - this.collisionDifferenceLimit,
@@ -30,7 +26,7 @@ export default class Collision {
       y: size.y - 2 * this.collisionDifferenceLimit,
     };
 
-    return (collisionPoints = [
+    return [
       { x: position.x, y: position.y },
       { x: position.x + size.x / 2, y: position.y },
       { x: position.x + size.x, y: position.y }, //first 3 collison point left up corner center and right
@@ -47,7 +43,7 @@ export default class Collision {
         y: position.y + size.y,
       },
       { x: position.x + size.x, y: position.y + size.y }, //first 3 collison point left up corner center and right
-    ]);
+    ];
   };
 
   checkCollision = (
@@ -57,7 +53,6 @@ export default class Collision {
     size: coords
   ) => {
     collisionPoints = this.game.collision.refreshCollisionPoints(
-      collisionPoints,
       position,
       size
     );
