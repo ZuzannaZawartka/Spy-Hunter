@@ -15,7 +15,7 @@ export default class Player extends Vehicle {
     super(width, height, game);
     this.moves = new Set();
     this.speed = 5;
-    this.maxSpeed = 40;
+    this.maxSpeed = 35;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
     this.isActive = true;

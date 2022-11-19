@@ -17,6 +17,16 @@ export default class Gui {
       this.game.gameWidth * 1.15 + "px";
   };
 
+  refreshGui = () => {
+    document.getElementById(
+      "timer"
+    )!.innerHTML = `<h1>${this.game.timeNoDeath}</h1>`;
+
+    document.getElementById(
+      "points"
+    )!.innerHTML = `<h1>${this.game.points}</h1>`;
+  };
+
   hideMenu = () => {
     document.getElementById("menu")!.style.display = "none";
     this.game.init();
@@ -25,6 +35,6 @@ export default class Gui {
   showMenu = () => {
     console.log("SHOW MENU");
     document.getElementById("menu")!.style.display = "block";
-    //document.getElementById("menu")!.style.zIndex = "5";
+    document.getElementById("menu")!.style.zIndex = "5";
   };
 }

@@ -22,6 +22,8 @@ export default class Game {
   public distance: number;
   public pointsForGround: number;
   public pointsForWater: number;
+  public timeNoDeath: number;
+  private timer: undefined | number;
 
   public background: Background;
   public player: Player;
@@ -49,13 +51,14 @@ export default class Game {
     this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
     this.pointsForGround = 15;
     this.pointsForWater = 25;
-
     this.points = 0;
     this.distance = 0;
     this.level = 0;
     this.isPause = false;
     this.isGameplay = false;
     this.animation = undefined;
+    this.timeNoDeath = 1000;
+    this.timer = undefined;
 
     this.background = new Background(this);
     this.player = new Player(50, 80, this);
@@ -75,21 +78,36 @@ export default class Game {
     this.distance = 0;
     this.level = 0;
     this.isPause = false;
+    this.timeNoDeath = 1000;
     this.background?.init();
   };
 
   start = () => {
-    console.log("stat");
     this.isGameplay = true;
     this.gui!.hideMenu();
+    this.noDeathTimer();
     this.animate();
   };
 
   pause = () => {
     this.isPause = !this.isPause;
-    console.log("PAUZA");
-    if (!this.isPause) this.animate();
-    else cancelAnimationFrame(this.animation!);
+    if (!this.isPause) {
+      this.animate();
+      if (this.timeNoDeath > 0) this.noDeathTimer();
+    } else {
+      cancelAnimationFrame(this.animation!);
+      if (this.timeNoDeath > 0) clearInterval(this.timer);
+    }
+  };
+
+  noDeathTimer = () => {
+    this.timer = setInterval(() => {
+      this.timeNoDeath--;
+      if (this.timeNoDeath <= 0) {
+        clearInterval(this.timer);
+        this.timeNoDeath = 0;
+      }
+    }, 100);
   };
 
   addPoints = () => {
@@ -115,6 +133,8 @@ export default class Game {
 
     this.player.draw(this.context!);
     this.player.update();
+
+    this.gui.refreshGui();
     if (this.isGameplay) {
       this.animation = requestAnimationFrame(this.animate);
     }

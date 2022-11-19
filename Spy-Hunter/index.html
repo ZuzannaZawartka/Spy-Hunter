@@ -4,48 +4,57 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>SPY-HUNTER</title>
   </head>
 
   <body>
     <div id="root-container">
       <div id="menu">
-        <div id="points-container">
-          <h2>HIGH:</h2>
-          <h2 id="points">0</h2>
-        </div>
-        <div id="title-container">
-          <div>
+        <div>
+          <div id="highest-score-container" class="menu-element">
+            <h2>HIGH:</h2>
+            <h2 id="highest-score">0</h2>
+          </div>
+          <div id="title-container" class="menu-element">
             <div>
-              <h1>SPY</h1>
-              <h1>HUNTER</h1>
+              <div>
+                <h1>SPY</h1>
+                <h1>HUNTER</h1>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="options-container">
-          <div>
-            <h2>PRESS</h2>
-            <h2>PRESS</h2>
+          <div id="options-container" class="menu-element">
+            <div>
+              <h2>PRESS</h2>
+              <h2>PRESS</h2>
+            </div>
+            <div>
+              <h2 class="green">START</h2>
+              <h2 class="green">OPTION</h2>
+              <h2>CHANGE</h2>
+            </div>
+            <div>
+              <h2>TO PLAY</h2>
+              <h2>TO</h2>
+              <h2>GAME</h2>
+            </div>
           </div>
-          <div>
-            <h2 class="green">START</h2>
-            <h2 class="green">OPTION</h2>
-            <h2>CHANGE</h2>
+          <div id="author" class="menu-element">
+            <h3>(C) 1983 Bally Midway</h3>
           </div>
-          <div>
-            <h2>TO PLAY</h2>
-            <h2>TO</h2>
-            <h2>GAME</h2>
-          </div>
-        </div>
-        <div id="author">
-          <h3>(C) 1983 Bally Midway</h3>
         </div>
       </div>
-      <div id="container">
-        <canvas id="canvas"></canvas>
-        <img id="backgroundImage" src="./graphics/SpyHunterArea01.png" />
-        <img id="playerImage" src="./graphics/car.png" />
+      <div id="game-ui-container">
+        <div id="points-container">
+          <div id="timer"><h1>3293203</h1></div>
+          <div id="points"><h1>12</h1></div>
+        </div>
+        <div id="container">
+          <canvas id="canvas"></canvas>
+          <img id="backgroundImage" src="./graphics/SpyHunterArea01.png" />
+          <img id="playerImage" src="./graphics/car.png" />
+        </div>
+        <div id="guns-container"></div>
       </div>
     </div>
 
