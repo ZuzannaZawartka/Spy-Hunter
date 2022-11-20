@@ -136,9 +136,6 @@ export default class Game {
 
       if ((this.points % 20) * this.points == 0) {
         this.obstacles.generatePuddle();
-        this.obstacles.generatePuddle();
-        this.obstacles.generatePuddle();
-        this.obstacles.generatePuddle();
       }
 
       if ((this.points % 100) * this.points == 0) {
