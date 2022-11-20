@@ -4,6 +4,8 @@ import Control from "./Control";
 import Gui from "./Gui";
 import Obstacles from "./Obstacles";
 import Player from "./Player";
+import BulletController from "./BulletController";
+import Vehicles from "./Vehicles";
 
 export default class Game {
   public canvas: HTMLCanvasElement | null;
@@ -31,6 +33,8 @@ export default class Game {
   public obstacles: Obstacles;
   public collision: Collision;
   public gui: Gui;
+  public vehicles: Vehicles;
+  public bulletController: BulletController;
   public animation: number | undefined;
 
   constructor(
@@ -61,11 +65,15 @@ export default class Game {
     this.timer = undefined;
 
     this.background = new Background(this);
-    this.player = new Player(50, 80, this);
+    this.player = new Player(40, 80, this);
     this.control = new Control(this);
     this.collision = new Collision(this);
-    this.obstacles = new Obstacles(this);
     this.gui = new Gui(this);
+
+    this.bulletController = new BulletController(this);
+    this.obstacles = new Obstacles(this);
+    this.vehicles = new Vehicles(this);
+
     this.init();
   }
 
@@ -110,7 +118,6 @@ export default class Game {
   noDeathTimer = () => {
     this.timer = setInterval(() => {
       this.timeNoDeath--;
-      console.log("interval");
       if (this.timeNoDeath <= 0) {
         clearInterval(this.timer);
         this.timeNoDeath = 0;
@@ -127,20 +134,33 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 100) * this.points == 0)
+      if ((this.points % 20) * this.points == 0) {
         this.obstacles.generatePuddle();
+        this.obstacles.generatePuddle();
+        this.obstacles.generatePuddle();
+        this.obstacles.generatePuddle();
+      }
+
+      if ((this.points % 100) * this.points == 0) {
+        this.vehicles.createCivilian();
+      }
     }
   };
 
   animate = () => {
+    // console.log(this.player.position);
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();
 
     this.obstacles.update(); //paddles,grenade etc.
 
-    this.player.draw(this.context!);
+    this.player.draw(this.context);
     this.player.update();
+
+    this.bulletController.draw(this.context);
+
+    this.vehicles.draw(this.context);
 
     this.gui.refreshGui();
     if (this.isGameplay) {

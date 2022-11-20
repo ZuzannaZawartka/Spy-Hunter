@@ -22,6 +22,7 @@ export default class Obstacles {
     let roadsPoints = this.game.background.getRoadStartEndPoints(this.position);
     let paddle = obstacles.find((obstacle) => obstacle.type == "paddle");
 
+    console.log("Generowanie");
     //generate Sign of paddle
     if (roadsPoints && paddle) {
       this.obstacles.push(

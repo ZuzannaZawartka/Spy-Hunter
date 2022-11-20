@@ -67,8 +67,7 @@ export default class Background {
           this.checkPixelStrike(pointsArray, color!) >=
             2 * this.game.player.maxVibrations &&
           startPoint == undefined &&
-          this.game.player.position.x - pixel <
-            this.game.player.playerEnvironment
+          this.game.player.position.x - pixel < this.game.player.environment
         ) {
           startPoint = pixel;
           pointsArray = [];

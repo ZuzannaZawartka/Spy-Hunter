@@ -3,8 +3,8 @@ const keymap = [
   { action: "DOWN", keys: ["ArrowDown", "s", "S"] },
   { action: "RIGHT", keys: ["ArrowRight", "d", "D"] },
   { action: "LEFT", keys: ["ArrowLeft", "a", "A"] },
-  { action: "SHOOT1", keys: ["Shift"] },
-  { action: "SHOOT2", keys: ["Control"] },
+  { action: "SHOOT1", keys: ["a", "A"] },
+  { action: "SHOOT2", keys: ["z", "Z"] },
 ];
 
 const keymapAction = [
@@ -34,7 +34,7 @@ const colorsCollisionGroups = [
 
 const obstacles = [
   {
-    id: 1,
+    id: 0,
     type: "paddle",
     imgSrc: "./graphics/obstacles/puddle.png",
     afterCollisionImgSrc: "./graphics/obstacles/puddle2.png",
@@ -42,12 +42,24 @@ const obstacles = [
     height: 40,
   },
   {
-    id: 2,
+    id: 1,
     type: "granade",
     imgSrc: "./graphics/obstacles/granade.png",
     afterCollisionImgSrc: "./graphics/obstacles/granade.png",
     width: 60,
     height: 36,
+  },
+];
+
+const civilian = [
+  {
+    id: 0,
+    type: "motor",
+    imgSrc: "./graphics/car.png",
+    afterCollisionImgSrc: "./graphics/car.png",
+    width: 80,
+    height: 40,
+    maxSpeed: 50,
   },
 ];
 export {
@@ -56,4 +68,5 @@ export {
   colorsCollisionGroups,
   obstacles,
   keymapAction,
+  civilian,
 };

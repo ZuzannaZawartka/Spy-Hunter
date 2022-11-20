@@ -1,8 +1,10 @@
+import Bullet from "./Bullet";
 import { collisionColors, colorsCollisionGroups } from "./config";
 import Game from "./Game";
 import { coords } from "./interfaces";
 import Obstacle from "./Obstacle";
 import Player from "./Player";
+import Vehicle from "./Vehicle";
 
 export default class Collision {
   collisionDifferenceLimit: number;
@@ -12,7 +14,7 @@ export default class Collision {
   constructor(game: Game) {
     this.player = game.player;
     this.game = game;
-    this.collisionDifferenceLimit = 15;
+    this.collisionDifferenceLimit = 10;
   }
 
   refreshCollisionPoints = (position: coords, size: coords) => {
@@ -46,6 +48,7 @@ export default class Collision {
   };
 
   checkCollision = (
+    vehicle: Vehicle,
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D,
     position: coords,
@@ -57,12 +60,14 @@ export default class Collision {
     );
 
     //pick every point of collison
-    this.checkColorCollison(collisionPoints, context);
-    this.checkObjectCollision(this.player.position, this.player.size);
+    this.checkColorCollison(vehicle, collisionPoints, context);
+    this.checkObjectCollision(vehicle);
+    this.checkBulletCollision(vehicle);
     return collisionPoints;
   };
 
   checkColorCollison = (
+    vehicle: Vehicle,
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
@@ -83,26 +88,53 @@ export default class Collision {
         );
 
         if (collisonGroup != undefined) {
-          if (collisonGroup.action == "vibrations") this.player.vibrations();
-          if (collisonGroup.action == "death") this.player.death();
+          if (collisonGroup.action == "vibrations") vehicle.vibrations();
+          if (collisonGroup.action == "death") vehicle.death();
         }
       }
     });
   };
 
-  checkObjectCollision = (position: coords, size: coords) => {
+  checkObjectCollision = (vehicle: Vehicle) => {
     this.game.obstacles.obstacles.forEach((element: Obstacle) => {
       if (
-        position.x + size.x >= element.position.x &&
-        position.x <= element.position.x + element.size.x &&
-        position.y + size.y >= element.position.y &&
-        position.y <= element.position.y + element.size.y
+        this.checkCollisionPosition(vehicle.position, vehicle.size, element)
       ) {
         //TO DO PRZEROBIENIA
         element.useObstacle();
-        this.game.player.skid(element);
+        //Jakis dzialanie na obstacle
+        vehicle.skid(element);
       }
     });
+  };
+
+  checkBulletCollision = (vehicle: Vehicle) => {
+    if (vehicle != this.game.player) {
+      console.log(vehicle);
+    }
+    this.game.bulletController.bullets.forEach((element: Bullet) => {
+      if (
+        this.checkCollisionPosition(vehicle.position, vehicle.size, element)
+      ) {
+        console.log("DEAD");
+        vehicle.death();
+      }
+    });
+  };
+
+  checkCollisionPosition = (
+    position: coords,
+    size: coords,
+    element: Bullet | Obstacle
+  ) => {
+    if (
+      position.x + size.x >= element.position.x &&
+      position.x <= element.position.x + element.size.x &&
+      position.y + size.y >= element.position.y &&
+      position.y <= element.position.y + element.size.y
+    )
+      return true;
+    else return false;
   };
 
   checkTypeOfCollision = (data: Uint8ClampedArray) => {

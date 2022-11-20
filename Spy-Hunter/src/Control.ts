@@ -4,6 +4,7 @@ import Game from "./Game";
 export default class Control {
   result: String | undefined;
   game: Game;
+  bulletsInterval: number | undefined;
 
   constructor(game: Game) {
     this.game = game;
@@ -41,6 +42,7 @@ export default class Control {
         this.game.player.isActive
       ) {
         //if game was started
+        console.log(this.game.player.moves);
         this.game.player.addMove(move);
       } else if (action != undefined) {
         if (action == "START" && this.game.isGameplay == false)
@@ -52,6 +54,7 @@ export default class Control {
     //if buttons are released
     window.addEventListener("keyup", (event) => {
       let move: string | undefined = this.findKey(event);
+
       move != undefined
         ? this.game.player.removeMove(move)
         : console.log("NIE MA RUCHU");

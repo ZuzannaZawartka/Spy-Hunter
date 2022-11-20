@@ -8,11 +8,13 @@ export default class Player extends Vehicle {
   turnDelay: number;
   lastSignVibration: number;
   speed: number;
+  bulletSpeed: number;
   isActive: boolean;
   moves: Set<String>;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
+
     this.moves = new Set();
     this.speed = 5;
     this.maxSpeed = 35;
@@ -21,6 +23,7 @@ export default class Player extends Vehicle {
     this.isActive = true;
     this.acceleration = 0.4;
     this.turnDelay = 50;
+    this.bulletSpeed = this.speed + 10;
 
     this.resizePLayer();
   }
@@ -48,6 +51,25 @@ export default class Player extends Vehicle {
     this.game.stop();
   };
 
+  shoot = () => {
+    if (this.game.player.moves.has("SHOOT1")) {
+      this.game.bulletController.shoot(
+        {
+          x: this.position.x,
+          y: this.position.y - this.size.x,
+        },
+        {
+          x:
+            this.position.x +
+            this.size.x -
+            this.game.bulletController.bulletSize.x,
+          y: this.position.y - this.size.x,
+        },
+        this.bulletSpeed
+      );
+    }
+  };
+
   addMove(action: string) {
     this.moves.add(action);
   }
@@ -56,8 +78,9 @@ export default class Player extends Vehicle {
   }
 
   draw = (context: CanvasRenderingContext2D) => {
-    this.playerCollisionPoints = this.game.collision.checkCollision(
-      this.playerCollisionPoints,
+    this.collisionPoints = this.game.collision.checkCollision(
+      this,
+      this.collisionPoints,
       context,
       this.position,
       this.size
