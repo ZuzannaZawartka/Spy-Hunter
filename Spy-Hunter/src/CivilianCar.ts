@@ -30,6 +30,27 @@ export default class CivilianCar extends Vehicle {
     };
   };
 
+  refreshPosition = () => {
+    if (this.position.y < this.game.gameHeight - 100) {
+      console.log(this.game.player.moves);
+
+      if (
+        this.game.player.moves.has("UP") ||
+        this.game.player.speed >= this.game.player.maxSpeed
+      ) {
+        this.speed--;
+      } else if (
+        this.game.player.moves.has("DOWN") ||
+        this.game.player.speed <= this.game.player.maxSpeed / 3
+      ) {
+        this.speed++;
+      }
+    } else {
+      this.speed++;
+    }
+    this.position.y -= this.speed / this.maxSpeed;
+  };
+
   draw = (context: CanvasRenderingContext2D) => {
     this.collisionPoints = this.game.collision.checkCollision(
       this,
@@ -39,11 +60,7 @@ export default class CivilianCar extends Vehicle {
       this.size
     );
 
-    this.position.y -= this.speed / this.maxSpeed;
-
-    if (this.game.player.speed < 10) this.speed++;
-    if (Math.abs(this.game.player.speed - this.game.player.maxSpeed) < 7)
-      this.speed--;
+    this.refreshPosition();
 
     context.drawImage(
       this.img!,

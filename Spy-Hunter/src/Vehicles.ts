@@ -10,6 +10,10 @@ export default class Vehicles {
     this.vehicles = [];
   }
 
+  reset = () => {
+    this.vehicles = [];
+  };
+
   createCivilian = () => {
     this.vehicles.push(new CivilianCar(this.game));
     console.log(this.vehicles);
@@ -25,6 +29,6 @@ export default class Vehicles {
       else vehicle.draw(context);
     });
 
-    console.log(this.vehicles);
+    //console.log(this.vehicles);
   };
 }

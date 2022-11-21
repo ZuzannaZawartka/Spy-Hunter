@@ -82,6 +82,7 @@ export default class Game {
     document.getElementById("container")!.style.height = this.gameHeight + "px";
     this.player.reset();
     this.obstacles.reset();
+    this.vehicles.reset();
     this.points = 0;
     this.distance = 0;
     this.level = 0;

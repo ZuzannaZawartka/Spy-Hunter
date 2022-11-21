@@ -110,16 +110,16 @@ export default class Collision {
 
   checkBulletCollision = (vehicle: Vehicle) => {
     if (vehicle != this.game.player) {
-      console.log(vehicle);
+      // console.log(vehicle);
+      this.game.bulletController.bullets.forEach((element: Bullet) => {
+        if (
+          this.checkCollisionPosition(vehicle.position, vehicle.size, element)
+        ) {
+          console.log("DEAD");
+          vehicle.death();
+        }
+      });
     }
-    this.game.bulletController.bullets.forEach((element: Bullet) => {
-      if (
-        this.checkCollisionPosition(vehicle.position, vehicle.size, element)
-      ) {
-        console.log("DEAD");
-        vehicle.death();
-      }
-    });
   };
 
   checkCollisionPosition = (
