@@ -17,14 +17,18 @@ export default class Collision {
     this.collisionDifferenceLimit = 10;
   }
 
-  refreshCollisionPoints = (position: coords, size: coords) => {
+  refreshCollisionPoints = (
+    position: coords,
+    size: coords,
+    collisionDifferenceLimit: number
+  ) => {
     position = {
-      x: position.x + this.collisionDifferenceLimit,
-      y: position.y - this.collisionDifferenceLimit,
+      x: position.x + collisionDifferenceLimit,
+      y: position.y - collisionDifferenceLimit,
     };
     size = {
-      x: size.x - 2 * this.collisionDifferenceLimit,
-      y: size.y - 2 * this.collisionDifferenceLimit,
+      x: size.x - 2 * collisionDifferenceLimit,
+      y: size.y - 2 * collisionDifferenceLimit,
     };
 
     return [
@@ -52,11 +56,13 @@ export default class Collision {
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D,
     position: coords,
-    size: coords
+    size: coords,
+    collisionDifferenceLimit: number
   ) => {
     collisionPoints = this.game.collision.refreshCollisionPoints(
       position,
-      size
+      size,
+      collisionDifferenceLimit
     );
 
     //pick every point of collison
@@ -144,5 +150,41 @@ export default class Collision {
         element.GREEN == data[1] &&
         element.BLUE == data[2]
     );
+  };
+
+  checkIsColorCollison = (
+    collisionPoints: { x: number; y: number }[],
+    context: CanvasRenderingContext2D
+  ) => {
+    let leftSide = [0, 3, 5];
+    let rightSide = [2, 4, 7];
+    let move = 0;
+
+    collisionPoints.forEach((collisionPoint, index) => {
+      const data = context.getImageData(
+        collisionPoint.x,
+        collisionPoint.y,
+        2,
+        2
+      ).data;
+
+      //checking collisions type and their groups
+      let collisionType = this.checkTypeOfCollision(data);
+      if (collisionType != undefined) {
+        //checking group of collision
+        let collisonGroup = colorsCollisionGroups.find((element) =>
+          element.colors.includes(collisionType!.id)
+        );
+
+        if (collisonGroup?.action == "vibrations") {
+          if (leftSide.includes(index)) {
+            move += 5;
+          } else if (rightSide.includes(index)) {
+            move -= 5;
+          }
+        }
+      }
+    });
+    return move;
   };
 }

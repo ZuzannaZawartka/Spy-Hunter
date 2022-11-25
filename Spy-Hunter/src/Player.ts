@@ -11,6 +11,7 @@ export default class Player extends Vehicle {
   bulletSpeed: number;
   isActive: boolean;
   moves: Set<String>;
+  collisionDifferenceLimit: number;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
@@ -24,6 +25,7 @@ export default class Player extends Vehicle {
     this.acceleration = 0.4;
     this.turnDelay = 50;
     this.bulletSpeed = this.speed + 10;
+    this.collisionDifferenceLimit = 15;
 
     this.resizePLayer();
   }
@@ -83,7 +85,8 @@ export default class Player extends Vehicle {
       this.collisionPoints,
       context,
       this.position,
-      this.size
+      this.size,
+      this.collisionDifferenceLimit
     );
 
     context.drawImage(

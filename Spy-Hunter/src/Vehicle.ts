@@ -10,6 +10,7 @@ export default class Vehicle {
   environment: number; // Player environment for obstacles, range of objects
   maxVibrations: number;
   game: Game;
+  collisionDifferenceLimit: number;
 
   lastSignVibration: number;
   speed: number;
@@ -29,6 +30,7 @@ export default class Vehicle {
     this.lastSignVibration = 1;
     this.isActive = true;
     this.environment = 150;
+    this.collisionDifferenceLimit = 15;
 
     this.createPlayer();
   }
@@ -88,7 +90,8 @@ export default class Vehicle {
       this.collisionPoints,
       context,
       this.position,
-      this.size
+      this.size,
+      this.collisionDifferenceLimit
     );
 
     context.drawImage(

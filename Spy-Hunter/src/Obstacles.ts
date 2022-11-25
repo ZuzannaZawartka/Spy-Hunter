@@ -44,7 +44,6 @@ export default class Obstacles {
           paddle.afterCollisionImgSrc
         )
       );
-      console.log(this.obstacles);
     }
   };
 
