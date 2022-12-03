@@ -26,6 +26,7 @@ export default class Player extends Vehicle {
     this.turnDelay = 50;
     this.bulletSpeed = this.speed + 10;
     this.collisionDifferenceLimit = 15;
+    this.isCivilian = false;
 
     this.resizePLayer();
   }

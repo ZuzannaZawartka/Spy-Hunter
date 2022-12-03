@@ -52,7 +52,8 @@ export default class Collision {
   };
 
   refreshBounceAction = (vehicle: Vehicle) => {
-    let power = vehicle.bouncePower * 2.5 * (vehicle.speed / vehicle.maxSpeed);
+    let power =
+      vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
 
     return [
       { x: -power, y: 0 },
@@ -61,7 +62,7 @@ export default class Collision {
 
       { x: -power, y: 0 },
       {
-        x: power,
+        x: 2 * power,
         y: 0,
       }, //first 3 collison point left up corner center and right
 
@@ -70,7 +71,7 @@ export default class Collision {
         x: 0,
         y: 0,
       },
-      { x: power, y: 0 }, //first 3 collison point left up corner center and right
+      { x: 2 * power, y: 0 }, //first 3 collison point left up corner center and right
     ];
   };
 
@@ -181,7 +182,8 @@ export default class Collision {
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
-    let power = vehicle.bouncePower * (vehicle.speed / vehicle.maxSpeed);
+    let power =
+      vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
     let leftSide = [0, 3, 5];
     let rightSide = [2, 4, 7];
     let move = 0;
@@ -211,13 +213,22 @@ export default class Collision {
         }
       }
     });
+
+    console.log(move);
     return move;
   };
 
   checkSideOfVehicleCollision = (vehicle: Vehicle, opponent: Vehicle) => {
     vehicle.collisionPoints.forEach((collisionPoint, index) => {
       if (
-        this.checkCollisionPosition(collisionPoint, { x: 1, y: 1 }, opponent)
+        this.checkCollisionPosition(
+          collisionPoint,
+          {
+            x: this.collisionDifferenceLimit * 2,
+            y: this.collisionDifferenceLimit * 2,
+          },
+          opponent
+        )
       ) {
         vehicle.moveAfterHit(vehicle, opponent, index);
       }

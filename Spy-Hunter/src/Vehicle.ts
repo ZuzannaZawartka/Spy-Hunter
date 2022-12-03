@@ -42,8 +42,12 @@ export default class Vehicle {
   }
 
   createPlayer = () => {
+    let number = Math.floor(Math.random() * civilian.length);
+    let vehicle = civilian.find((vehicle) => vehicle.id == number);
+    this.isCivilian = vehicle!.isCivilian;
+    this.maxSpeed = vehicle!.maxSpeed;
     this.img = new Image();
-    this.img.src = civilian.find((el) => el.id == 0)!.imgSrc;
+    this.img.src = vehicle!.imgSrc;
     this.img.width = this.size.x;
     this.img.height = this.size.y;
   };
@@ -125,8 +129,10 @@ export default class Vehicle {
     if (vehicle.isCivilian && !opponent.isCivilian) {
       vehicle.position.x +=
         vehicle.vehicleHitAction[directionIndex].x / (vehicle.bouncePower / 2);
-    } else {
+    } else if (vehicle.isCivilian && opponent.isCivilian) {
       //opponent.speed = this.game.player.speed;
+      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
+    } else {
       opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
     }
   };

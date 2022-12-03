@@ -55,11 +55,22 @@ const civilian = [
   {
     id: 0,
     type: "motor",
-    imgSrc: "./graphics/car.png",
-    afterCollisionImgSrc: "./graphics/car.png",
+    imgSrc: "./graphics/vehicles/civilian2.png",
+    afterCollisionImgSrc: "./graphics/vehicles/civilian2.png",
     width: 80,
     height: 40,
-    maxSpeed: 50,
+    maxSpeed: 60,
+    isCivilian: true,
+  },
+  {
+    id: 1,
+    type: "civilianCar",
+    imgSrc: "./graphics/vehicles/civilian.png",
+    afterCollisionImgSrc: "./graphics/vehicles/civilian.png",
+    width: 80,
+    height: 40,
+    maxSpeed: 60,
+    isCivilian: true,
   },
 ];
 export {
