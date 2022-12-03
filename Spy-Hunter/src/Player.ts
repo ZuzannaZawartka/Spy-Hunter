@@ -89,6 +89,8 @@ export default class Player extends Vehicle {
       this.collisionDifferenceLimit
     );
 
+    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
+
     context.drawImage(
       document.getElementById("playerImage") as CanvasImageSource,
       this.position.x,
@@ -115,7 +117,7 @@ export default class Player extends Vehicle {
       //vertical movement
       let turn =
         ((this.speed / this.maxSpeed) * (this.game.gameWidth / this.size.x)) /
-        2;
+        3.5;
 
       if (this.moves.has("LEFT") && this.speed > 0 && this.position.x > 0) {
         setTimeout(() => {

@@ -8,10 +8,12 @@ export default class Vehicles {
   constructor(game: Game) {
     this.game = game;
     this.vehicles = [];
+    this.reset();
   }
 
   reset = () => {
     this.vehicles = [];
+    this.vehicles.push(this.game.player);
   };
 
   createCivilian = () => {

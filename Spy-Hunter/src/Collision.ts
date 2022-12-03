@@ -51,6 +51,29 @@ export default class Collision {
     ];
   };
 
+  refreshBounceAction = (vehicle: Vehicle) => {
+    let power = vehicle.bouncePower * 2.5 * (vehicle.speed / vehicle.maxSpeed);
+
+    return [
+      { x: -power, y: 0 },
+      { x: 0, y: 0 },
+      { x: power, y: 0 }, //first 3 collison point left up corner center and right
+
+      { x: -power, y: 0 },
+      {
+        x: power,
+        y: 0,
+      }, //first 3 collison point left up corner center and right
+
+      { x: -power, y: 0 },
+      {
+        x: 0,
+        y: 0,
+      },
+      { x: power, y: 0 }, //first 3 collison point left up corner center and right
+    ];
+  };
+
   checkCollision = (
     vehicle: Vehicle,
     collisionPoints: { x: number; y: number }[],
@@ -69,6 +92,7 @@ export default class Collision {
     this.checkColorCollison(vehicle, collisionPoints, context);
     this.checkObjectCollision(vehicle);
     this.checkBulletCollision(vehicle);
+    this.checkVehiclesCollision(vehicle);
     return collisionPoints;
   };
 
@@ -131,7 +155,7 @@ export default class Collision {
   checkCollisionPosition = (
     position: coords,
     size: coords,
-    element: Bullet | Obstacle
+    element: Bullet | Obstacle | Vehicle
   ) => {
     if (
       position.x + size.x >= element.position.x &&
@@ -153,9 +177,11 @@ export default class Collision {
   };
 
   checkIsColorCollison = (
+    vehicle: Vehicle,
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
+    let power = vehicle.bouncePower * (vehicle.speed / vehicle.maxSpeed);
     let leftSide = [0, 3, 5];
     let rightSide = [2, 4, 7];
     let move = 0;
@@ -178,13 +204,38 @@ export default class Collision {
 
         if (collisonGroup?.action == "vibrations") {
           if (leftSide.includes(index)) {
-            move += 5;
+            move += power / (vehicle.bouncePower / 2);
           } else if (rightSide.includes(index)) {
-            move -= 5;
+            move -= power / (vehicle.bouncePower / 2);
           }
         }
       }
     });
     return move;
+  };
+
+  checkSideOfVehicleCollision = (vehicle: Vehicle, opponent: Vehicle) => {
+    vehicle.collisionPoints.forEach((collisionPoint, index) => {
+      if (
+        this.checkCollisionPosition(collisionPoint, { x: 1, y: 1 }, opponent)
+      ) {
+        vehicle.moveAfterHit(vehicle, opponent, index);
+      }
+    });
+  };
+
+  checkVehiclesCollision = (vehicle: Vehicle) => {
+    this.game.vehicles.vehicles.forEach((opponents: Vehicle) => {
+      if (
+        this.checkCollisionPosition(
+          vehicle.position,
+          vehicle.size,
+          opponents
+        ) &&
+        vehicle != opponents
+      ) {
+        this.checkSideOfVehicleCollision(vehicle, opponents);
+      }
+    });
   };
 }

@@ -11,10 +11,13 @@ export default class Vehicle {
   maxVibrations: number;
   game: Game;
   collisionDifferenceLimit: number;
+  isCivilian: boolean;
+  bouncePower: number;
 
   lastSignVibration: number;
   speed: number;
   collisionPoints: { x: number; y: number }[];
+  vehicleHitAction: { x: number; y: number }[];
   isActive: boolean;
   moves: Set<String>;
   img: HTMLImageElement | undefined | CanvasImageSource;
@@ -24,13 +27,16 @@ export default class Vehicle {
     (this.position = { x: 200, y: this.game.minPlayerArea - this.size.y }),
       (this.moves = new Set());
     this.collisionPoints = [];
+    this.vehicleHitAction = [];
     this.speed = 5;
     this.maxSpeed = 40;
     this.maxVibrations = 8;
+    this.bouncePower = 30;
     this.lastSignVibration = 1;
     this.isActive = true;
     this.environment = 150;
     this.collisionDifferenceLimit = 15;
+    this.isCivilian = false;
 
     this.createPlayer();
   }
@@ -84,6 +90,47 @@ export default class Vehicle {
     this.isActive = true;
   };
 
+  refreshPosition = () => {
+    if (this.position.y < this.game.gameHeight - 100) {
+      if (
+        this.game.player.moves.has("UP") ||
+        this.game.player.speed >= this.game.player.maxSpeed
+      ) {
+        this.speed--;
+      } else if (
+        this.game.player.moves.has("DOWN") ||
+        this.game.player.speed <= this.game.player.maxSpeed / 3
+      ) {
+        this.speed++;
+      }
+    } else {
+      this.speed++;
+    }
+    this.position.y -= (this.speed * 1.5) / this.maxSpeed;
+
+    this.position.x -= this.game.collision.checkIsColorCollison(
+      this,
+      this.collisionPoints,
+      this.game.context
+    );
+
+    if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+  };
+
+  moveAfterHit = (
+    vehicle: Vehicle,
+    opponent: Vehicle,
+    directionIndex: number
+  ) => {
+    if (vehicle.isCivilian && !opponent.isCivilian) {
+      vehicle.position.x +=
+        vehicle.vehicleHitAction[directionIndex].x / (vehicle.bouncePower / 2);
+    } else {
+      //opponent.speed = this.game.player.speed;
+      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
+    }
+  };
+
   draw = (context: CanvasRenderingContext2D) => {
     this.collisionPoints = this.game.collision.checkCollision(
       this,
@@ -91,8 +138,12 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.collisionDifferenceLimit
+      this.size.y / 2 //      this.collisionDifferenceLimit
     );
+
+    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
+
+    this.refreshPosition();
 
     context.drawImage(
       this.img!,

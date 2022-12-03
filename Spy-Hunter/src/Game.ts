@@ -135,11 +135,11 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 20) * this.points == 0) {
+      if ((this.points % 1000) * this.points == 0) {
         this.obstacles.generatePuddle();
       }
 
-      if ((this.points % 100) * this.points == 0) {
+      if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
       }
     }
