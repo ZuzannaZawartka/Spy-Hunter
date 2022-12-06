@@ -1,5 +1,6 @@
 import CivilianCar from "./CivilianCar";
 import Game from "./Game";
+import Truck from "./Truck";
 import Vehicle from "./Vehicle";
 
 export default class Vehicles {
@@ -21,6 +22,11 @@ export default class Vehicles {
     console.log(this.vehicles);
   };
 
+  createTruck = () => {
+    this.vehicles.push(new Truck(this.game));
+    console.log(this.vehicles);
+  };
+
   draw = (context: CanvasRenderingContext2D) => {
     this.vehicles.forEach((vehicle) => {
       if (
@@ -31,6 +37,6 @@ export default class Vehicles {
       else vehicle.draw(context);
     });
 
-    //console.log(this.vehicles);
+    ///console.log(this.vehicles);
   };
 }

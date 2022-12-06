@@ -6,6 +6,7 @@ import Obstacles from "./Obstacles";
 import Player from "./Player";
 import BulletController from "./BulletController";
 import Vehicles from "./Vehicles";
+import Guns from "./Guns";
 
 export default class Game {
   public canvas: HTMLCanvasElement | null;
@@ -29,6 +30,7 @@ export default class Game {
 
   public background: Background;
   public player: Player;
+  public guns: Guns;
   public control: Control;
   public obstacles: Obstacles;
   public collision: Collision;
@@ -69,6 +71,7 @@ export default class Game {
     this.control = new Control(this);
     this.collision = new Collision(this);
     this.gui = new Gui(this);
+    this.guns = new Guns(this);
 
     this.bulletController = new BulletController(this);
     this.obstacles = new Obstacles(this);
@@ -141,6 +144,11 @@ export default class Game {
 
       if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
+        this.vehicles.createCivilian();
+        // this.vehicles.createCivilian();
+        //this.vehicles.createCivilian();
+        // this.vehicles.createCivilian();
+        // this.vehicles.createTruck();
       }
     }
   };

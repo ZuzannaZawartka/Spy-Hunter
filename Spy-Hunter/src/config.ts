@@ -51,14 +51,76 @@ const obstacles = [
   },
 ];
 
-const civilian = [
+const guns = [
+  {
+    id: 0,
+    type: "gun",
+    imgSrc: "./graphics/guns/gun1.png",
+    afterCollisionImgSrc: "./graphics/guns/gun1.png",
+    width: 120,
+    height: 60,
+  },
+  {
+    id: 1,
+    type: "gun2",
+    imgSrc: "./graphics/guns/gun2.png",
+    afterCollisionImgSrc: "./graphics/guns/gun2.png",
+    width: 150,
+    height: 90,
+  },
+];
+
+const truck = [
+  {
+    id: 0,
+    type: "truck1",
+    imgSrc: "./graphics/vehicles/truck1.png",
+    afterCollisionImgSrc: "./graphics/vehicles/truck1.png",
+    width: 120,
+    height: 60,
+    maxSpeed: 60,
+    isCivilian: true,
+  },
+  {
+    id: 2,
+    type: "truck2",
+    imgSrc: "./graphics/vehicles/truck2.png",
+    afterCollisionImgSrc: "./graphics/vehicles/truck2.png",
+    width: 150,
+    height: 90,
+    maxSpeed: 60,
+    isCivilian: true,
+  },
+  {
+    id: 3,
+    type: "truck3",
+    imgSrc: "./graphics/vehicles/truck3.png",
+    afterCollisionImgSrc: "./graphics/vehicles/truck3.png",
+    width: 150,
+    height: 90,
+    maxSpeed: 60,
+    isCivilian: true,
+  },
+  {
+    id: 4,
+    type: "truck4",
+    imgSrc: "./graphics/vehicles/truck4.png",
+    afterCollisionImgSrc: "./graphics/vehicles/truck4.png",
+    width: 150,
+    height: 90,
+    maxSpeed: 60,
+    isCivilian: true,
+  },
+];
+
+const vehicles = [
   {
     id: 0,
     type: "motor",
     imgSrc: "./graphics/vehicles/civilian2.png",
     afterCollisionImgSrc: "./graphics/vehicles/civilian2.png",
-    width: 80,
-    height: 40,
+    width: 40,
+    height: 80,
     maxSpeed: 60,
     isCivilian: true,
   },
@@ -67,8 +129,8 @@ const civilian = [
     type: "civilianCar",
     imgSrc: "./graphics/vehicles/civilian.png",
     afterCollisionImgSrc: "./graphics/vehicles/civilian.png",
-    width: 80,
-    height: 40,
+    width: 40,
+    height: 80,
     maxSpeed: 60,
     isCivilian: true,
   },
@@ -79,5 +141,7 @@ export {
   colorsCollisionGroups,
   obstacles,
   keymapAction,
-  civilian,
+  vehicles,
+  guns,
+  truck,
 };

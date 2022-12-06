@@ -1,6 +1,6 @@
-import { civilian } from "./config";
+import { vehicles } from "./config";
 import Game from "./Game";
-import { coords } from "./interfaces";
+import { coords, gameObjects } from "./interfaces";
 import Obstacle from "./Obstacle";
 
 export default class Vehicle {
@@ -31,25 +31,35 @@ export default class Vehicle {
     this.speed = 5;
     this.maxSpeed = 40;
     this.maxVibrations = 8;
-    this.bouncePower = 30;
+    this.bouncePower = 20;
     this.lastSignVibration = 1;
     this.isActive = true;
     this.environment = 150;
     this.collisionDifferenceLimit = 15;
     this.isCivilian = false;
-
-    this.createPlayer();
   }
 
   createPlayer = () => {
-    let number = Math.floor(Math.random() * civilian.length);
-    let vehicle = civilian.find((vehicle) => vehicle.id == number);
+    let number = Math.floor(Math.random() * vehicles.length);
+    let vehicle = vehicles.find((vehicle) => vehicle.id == number);
     this.isCivilian = vehicle!.isCivilian;
     this.maxSpeed = vehicle!.maxSpeed;
     this.img = new Image();
     this.img.src = vehicle!.imgSrc;
-    this.img.width = this.size.x;
-    this.img.height = this.size.y;
+    this.img.width = vehicle!.width;
+    this.img.height = vehicle!.height;
+    this.size = { x: vehicle!.width, y: vehicle!.height };
+  };
+
+  createVehicle = (config: gameObjects) => {
+    let vehicle = config;
+    this.isCivilian = vehicle!.isCivilian;
+    this.maxSpeed = vehicle!.maxSpeed;
+    this.img = new Image();
+    this.img.src = vehicle!.imgSrc;
+    this.img.width = vehicle!.width;
+    this.img.height = vehicle!.height;
+    this.size = { x: vehicle!.width, y: vehicle!.height };
   };
 
   death = () => {
@@ -95,7 +105,7 @@ export default class Vehicle {
   };
 
   refreshPosition = () => {
-    if (this.position.y < this.game.gameHeight - 100) {
+    if (this.position.y < this.game.gameHeight - 200) {
       if (
         this.game.player.moves.has("UP") ||
         this.game.player.speed >= this.game.player.maxSpeed
@@ -110,7 +120,7 @@ export default class Vehicle {
     } else {
       this.speed++;
     }
-    this.position.y -= (this.speed * 1.5) / this.maxSpeed;
+    this.position.y -= (this.speed / this.maxSpeed) * 2;
 
     this.position.x -= this.game.collision.checkIsColorCollison(
       this,
@@ -127,13 +137,16 @@ export default class Vehicle {
     directionIndex: number
   ) => {
     if (vehicle.isCivilian && !opponent.isCivilian) {
-      vehicle.position.x +=
-        vehicle.vehicleHitAction[directionIndex].x / (vehicle.bouncePower / 2);
-    } else if (vehicle.isCivilian && opponent.isCivilian) {
-      //opponent.speed = this.game.player.speed;
-      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
+      //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
+      if (vehicle.vehicleHitAction[directionIndex].x > 0)
+        vehicle.position.x += vehicle.bouncePower / 4;
+      else vehicle.position.x -= vehicle.bouncePower / 4;
+    } else if (!vehicle.isCivilian && opponent.isCivilian) {
+      opponent.position.x +=
+        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
     } else {
-      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
+      opponent.position.x +=
+        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 6);
     }
   };
 
@@ -144,7 +157,7 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.size.y / 2 //      this.collisionDifferenceLimit
+      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
     );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);

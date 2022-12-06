@@ -1,16 +1,17 @@
+import { truck } from "./config";
 import Game from "./Game";
 import Vehicle from "./Vehicle";
 
-export default class CivilianCar extends Vehicle {
+export default class Truck extends Vehicle {
   constructor(game: Game) {
     super(40, 80, game);
     this.maxSpeed = 40;
     this.isCivilian = true;
     this.create();
+    this.createVehicle(truck.find((el) => el.id == 0)!);
   }
 
   create = () => {
-    this.createPlayer();
     this.speed = this.game.player.speed;
 
     let startEndPoints = this.game.background.getRoadStartEndPoints(
@@ -27,27 +28,5 @@ export default class CivilianCar extends Vehicle {
       ),
       y: this.game.gameHeight + this.game.player.environment,
     };
-  };
-  draw = (context: CanvasRenderingContext2D) => {
-    this.collisionPoints = this.game.collision.checkCollision(
-      this,
-      this.collisionPoints,
-      context,
-      this.position,
-      this.size,
-      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
-    );
-
-    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
-
-    this.refreshPosition();
-
-    context.drawImage(
-      this.img!,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
-    );
   };
 }
