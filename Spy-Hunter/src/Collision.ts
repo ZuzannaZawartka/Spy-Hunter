@@ -59,7 +59,7 @@ export default class Collision {
     //     vehicle.bouncePower * (Math.abs(vehicle.speed) / 2 / vehicle.maxSpeed);
     // else
     power =
-      2 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
+      3 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
 
     return [
       { x: -power, y: 0 },
@@ -73,12 +73,12 @@ export default class Collision {
         y: 0,
       }, //first 3 collison point left up corner center and right
 
-      { x: -power, y: 0 },
+      { x: -2 * power, y: 0 },
       {
         x: 0,
         y: 0,
       },
-      { x: power, y: 0 }, //first 3 collison point left up corner center and right
+      { x: 2 * power, y: 0 }, //first 3 collison point left up corner center and right
     ];
   };
 
@@ -189,17 +189,9 @@ export default class Collision {
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
-    let power: number;
+    let power =
+      3 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
 
-    if (Math.abs(vehicle.speed) > vehicle.maxSpeed * 2) {
-      power =
-        4 *
-        vehicle.bouncePower *
-        (Math.abs(vehicle.speed) / 5 / vehicle.maxSpeed);
-    } else {
-      power =
-        4 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
-    }
     let leftSide = [0, 3, 5];
     let rightSide = [2, 4, 7];
     let move = 0;
@@ -222,9 +214,9 @@ export default class Collision {
 
         if (collisonGroup?.action == "vibrations") {
           if (leftSide.includes(index)) {
-            move -= power / vehicle.bouncePower / 2;
+            move -= power / vehicle.bouncePower;
           } else if (rightSide.includes(index)) {
-            move += power / vehicle.bouncePower / 2;
+            move += power / vehicle.bouncePower;
           }
         }
       }

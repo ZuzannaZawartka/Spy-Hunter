@@ -139,8 +139,13 @@ export default class Vehicle {
     if (vehicle.isCivilian && !opponent.isCivilian) {
       //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
       if (vehicle.vehicleHitAction[directionIndex].x > 0)
-        vehicle.position.x += vehicle.bouncePower / 4;
-      else vehicle.position.x -= vehicle.bouncePower / 4;
+        vehicle.position.x -=
+          vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
+      else
+        vehicle.position.x +=
+          vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
+
+      console.log(vehicle.vehicleHitAction[directionIndex].x);
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x +=
         vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
@@ -157,7 +162,7 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
+      this.collisionDifferenceLimit * (3 / 2) //      this.collisionDifferenceLimit
     );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
