@@ -58,8 +58,7 @@ export default class Collision {
     //   power =
     //     vehicle.bouncePower * (Math.abs(vehicle.speed) / 2 / vehicle.maxSpeed);
     // else
-    power =
-      3 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
+    power = 3 * vehicle.bouncePower * (Math.abs(30) / vehicle.maxSpeed);
 
     return [
       { x: -power, y: 0 },
@@ -73,12 +72,12 @@ export default class Collision {
         y: 0,
       }, //first 3 collison point left up corner center and right
 
-      { x: -2 * power, y: 0 },
+      { x: -power, y: 0 },
       {
         x: 0,
         y: 0,
       },
-      { x: 2 * power, y: 0 }, //first 3 collison point left up corner center and right
+      { x: power, y: 0 }, //first 3 collison point left up corner center and right
     ];
   };
 
@@ -153,7 +152,7 @@ export default class Collision {
         if (
           this.checkCollisionPosition(vehicle.position, vehicle.size, element)
         ) {
-          console.log("DEAD");
+          if (vehicle.isCivilian) this.player.killedCivile();
           vehicle.death();
         }
       });
@@ -189,9 +188,7 @@ export default class Collision {
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
-    let power =
-      3 * vehicle.bouncePower * (Math.abs(vehicle.speed) / vehicle.maxSpeed);
-
+    let power = vehicle.vehicleHitAction[2].x * 2;
     let leftSide = [0, 3, 5];
     let rightSide = [2, 4, 7];
     let move = 0;

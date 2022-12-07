@@ -21,6 +21,7 @@ export default class Vehicle {
   isActive: boolean;
   moves: Set<String>;
   img: HTMLImageElement | undefined | CanvasImageSource;
+  type: undefined | string;
 
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
@@ -37,18 +38,13 @@ export default class Vehicle {
     this.environment = 150;
     this.collisionDifferenceLimit = 15;
     this.isCivilian = false;
+    this.type = undefined;
   }
 
   createPlayer = () => {
     let number = Math.floor(Math.random() * vehicles.length);
     let vehicle = vehicles.find((vehicle) => vehicle.id == number);
-    this.isCivilian = vehicle!.isCivilian;
-    this.maxSpeed = vehicle!.maxSpeed;
-    this.img = new Image();
-    this.img.src = vehicle!.imgSrc;
-    this.img.width = vehicle!.width;
-    this.img.height = vehicle!.height;
-    this.size = { x: vehicle!.width, y: vehicle!.height };
+    this.createVehicle(vehicle!);
   };
 
   createVehicle = (config: gameObjects) => {
@@ -60,6 +56,7 @@ export default class Vehicle {
     this.img.width = vehicle!.width;
     this.img.height = vehicle!.height;
     this.size = { x: vehicle!.width, y: vehicle!.height };
+    this.type = vehicle.type;
   };
 
   death = () => {
@@ -120,7 +117,7 @@ export default class Vehicle {
     } else {
       this.speed++;
     }
-    this.position.y -= (this.speed / this.maxSpeed) * 2;
+    this.position.y -= this.speed / this.maxSpeed;
 
     this.position.x -= this.game.collision.checkIsColorCollison(
       this,
@@ -128,7 +125,7 @@ export default class Vehicle {
       this.game.context
     );
 
-    if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+    // if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
   };
 
   moveAfterHit = (
@@ -144,14 +141,13 @@ export default class Vehicle {
       else
         vehicle.position.x +=
           vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
-
       console.log(vehicle.vehicleHitAction[directionIndex].x);
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x +=
         vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
     } else {
       opponent.position.x +=
-        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 6);
+        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
     }
   };
 
@@ -162,7 +158,7 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.collisionDifferenceLimit * (3 / 2) //      this.collisionDifferenceLimit
+      this.collisionDifferenceLimit / 2 //      this.collisionDifferenceLimit
     );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);

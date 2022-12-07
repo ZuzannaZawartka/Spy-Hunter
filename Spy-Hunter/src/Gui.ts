@@ -25,6 +25,13 @@ export default class Gui {
     document.getElementById(
       "points"
     )!.innerHTML = `<h1>${this.game.points}</h1>`;
+
+    if (this.game.isBlockedCountingPoints) {
+      document.getElementById(
+        "timer"
+      )!.innerHTML = `<h1>YOU killed civile</h1>`;
+      document.getElementById("points")!.innerHTML = ``;
+    }
   };
 
   hideMenu = () => {

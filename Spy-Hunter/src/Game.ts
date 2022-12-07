@@ -20,6 +20,7 @@ export default class Game {
 
   public isGameplay: boolean; //czy byl death czy nie jesli tak to zatrzymanie
   public isPause: boolean; //pauza
+  public isRecovery: boolean;
   public points: number;
   public level: number;
   public distance: number;
@@ -38,6 +39,7 @@ export default class Game {
   public vehicles: Vehicles;
   public bulletController: BulletController;
   public animation: number | undefined;
+  isBlockedCountingPoints: boolean;
 
   constructor(
     gameWidth: number,
@@ -61,7 +63,9 @@ export default class Game {
     this.distance = 0;
     this.level = 0;
     this.isPause = false;
+    this.isBlockedCountingPoints = false;
     this.isGameplay = false;
+    this.isRecovery = false; // truck drive with car
     this.animation = undefined;
     this.timeNoDeath = 1000;
     this.timer = undefined;
@@ -95,10 +99,18 @@ export default class Game {
   };
 
   start = () => {
-    this.isGameplay = true;
+    this.isGameplay = false;
+    this.isRecovery = true;
     this.gui!.hideMenu();
-    this.noDeathTimer();
     this.animate();
+    this.vehicles.createTruck();
+  };
+
+  startDrive = () => {
+    this.isGameplay = true;
+    this.isRecovery = false;
+    this.player.isActive = true;
+    this.noDeathTimer();
   };
 
   stop = () => {
@@ -145,10 +157,6 @@ export default class Game {
       if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
         this.vehicles.createCivilian();
-        // this.vehicles.createCivilian();
-        //this.vehicles.createCivilian();
-        // this.vehicles.createCivilian();
-        // this.vehicles.createTruck();
       }
     }
   };
@@ -161,15 +169,15 @@ export default class Game {
 
     this.obstacles.update(); //paddles,grenade etc.
 
-    this.player.draw(this.context);
-    this.player.update();
+    //this.player.draw(this.context);
 
     this.bulletController.draw(this.context);
 
     this.vehicles.draw(this.context);
+    this.player.update();
 
     this.gui.refreshGui();
-    if (this.isGameplay) {
+    if (this.isGameplay || this.isRecovery) {
       this.animation = requestAnimationFrame(this.animate);
     }
   };
