@@ -13,6 +13,7 @@ export default class Player extends Vehicle {
   moves: Set<String>;
   collisionDifferenceLimit: number;
   beforeMove: boolean;
+  life: number;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
@@ -29,6 +30,7 @@ export default class Player extends Vehicle {
     this.collisionDifferenceLimit = 15;
     this.isCivilian = false;
     this.beforeMove = true;
+    this.life = 1; // number of live
 
     this.resizePLayer();
   }
@@ -39,7 +41,7 @@ export default class Player extends Vehicle {
       y: this.game.gameHeight,
     };
     this.speed = 0;
-    this.isActive = false;
+    this.isActive = true;
     this.beforeMove = true;
   };
 
@@ -52,7 +54,17 @@ export default class Player extends Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
     this.isActive = false;
-    this.game.stop();
+    this.speed = 0;
+    // this.position.y = 1100;
+    if (this.game.timeNoDeath > 0) {
+      this.game.restartGame();
+    } else {
+      if (this.life > 0) {
+        this.game.restartGame();
+      } else {
+        this.game.stop();
+      }
+    }
   };
 
   shoot = () => {
@@ -82,7 +94,7 @@ export default class Player extends Vehicle {
   }
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (!this.beforeMove)
+    if (!this.beforeMove || !this.isActive)
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,
@@ -104,9 +116,7 @@ export default class Player extends Vehicle {
   };
 
   update = () => {
-    console.log(this.moves.size > 0);
     if (this.beforeMove && this.moves.size > 0) this.beforeMove = false;
-
     if (this.isActive && !this.game.isRecovery) {
       //horizontal movemnet
       if (this.moves.has("UP") || this.moves.has("DOWN")) {
@@ -143,6 +153,11 @@ export default class Player extends Vehicle {
       if (!this.game.isBlockedCountingPoints) this.game.distance += this.speed; // distance counting to points if player killed civile block earning points
 
       this.game.addPoints();
+    } else if (!this.isActive && this.game.isGameplay) {
+      if (this.position.y < this.game.gameHeight) {
+        console.log("DODAWANIE");
+        this.position.y += this.game.recoverySpeed;
+      }
     }
   };
 

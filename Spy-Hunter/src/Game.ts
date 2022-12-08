@@ -39,7 +39,8 @@ export default class Game {
   public vehicles: Vehicles;
   public bulletController: BulletController;
   public animation: number | undefined;
-  isBlockedCountingPoints: boolean;
+  public isBlockedCountingPoints: boolean;
+  public recoverySpeed: number;
 
   constructor(
     gameWidth: number,
@@ -59,6 +60,7 @@ export default class Game {
     this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
     this.pointsForGround = 15;
     this.pointsForWater = 25;
+    this.recoverySpeed = 3;
     this.points = 0;
     this.distance = 0;
     this.level = 0;
@@ -106,11 +108,25 @@ export default class Game {
     this.vehicles.createTruck();
   };
 
+  restartGame = () => {
+    console.log("RESTART");
+
+    this.isGameplay = false;
+    this.isRecovery = true;
+    this.vehicles.truckRecovery();
+    console.log(this.vehicles.vehicles);
+  };
+
   startDrive = () => {
     this.isGameplay = true;
     this.isRecovery = false;
     this.player.isActive = true;
     this.noDeathTimer();
+  };
+
+  recovery = () => {
+    this.isGameplay = true; // if gameplay is on and player isActive false background slide
+    this.isRecovery = false;
   };
 
   stop = () => {
@@ -162,21 +178,16 @@ export default class Game {
   };
 
   animate = () => {
-    // console.log(this.player.position);
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();
-
     this.obstacles.update(); //paddles,grenade etc.
-
-    //this.player.draw(this.context);
-
     this.bulletController.draw(this.context);
 
+    this.gui.refreshGui();
     this.vehicles.draw(this.context);
     this.player.update();
 
-    this.gui.refreshGui();
     if (this.isGameplay || this.isRecovery) {
       this.animation = requestAnimationFrame(this.animate);
     }

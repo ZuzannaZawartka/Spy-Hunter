@@ -7,9 +7,12 @@ import Vehicle from "./Vehicle";
 export default class Vehicles {
   game: Game;
   vehicles: Vehicle[];
+  truck: undefined | Vehicle | Truck;
+
   constructor(game: Game) {
     this.game = game;
     this.vehicles = [];
+    this.truck = undefined;
     this.reset();
   }
 
@@ -24,16 +27,28 @@ export default class Vehicles {
 
   createCivilian = () => {
     this.vehicles.push(new CivilianCar(this.game));
-    console.log(this.vehicles);
+  };
+
+  truckRecovery = () => {
+    console.log("tak");
+    if (this.getVehicle("truck") == undefined)
+      this.vehicles.push(new Truck(this.game));
   };
 
   createTruck = () => {
     this.vehicles.push(new Truck(this.game));
-    console.log(this.vehicles);
+    this.truck = this.getVehicle("truck")!;
   };
 
-  getTruck = () => {
-    return this.vehicles.find((vehicle) => vehicle.type == "truck");
+  deleteSpecificTypeOfObject = (typeOfVehicle: string) => {
+    this.vehicles = this.vehicles.filter(
+      (vehicle) => vehicle != this.getVehicle(typeOfVehicle)
+    );
+    if (typeOfVehicle == "truck") this.truck = undefined;
+  };
+
+  getVehicle = (typeOfVehicle: string) => {
+    return this.vehicles.find((vehicle) => vehicle.type == typeOfVehicle);
   };
 
   draw = (context: CanvasRenderingContext2D) => {

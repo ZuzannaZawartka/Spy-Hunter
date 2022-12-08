@@ -18,6 +18,11 @@ export default class Truck extends Vehicle {
     this.createVehicle(truck.find((el) => el.id == 0)!);
   }
 
+  resetSetOfTruck = () => {
+    this.isReady = false;
+    this.afterCar = false;
+  };
+
   create = () => {
     let startEndPoints = this.game.background.getRoadStartEndPoints(
       this.game.gameHeight - 100
@@ -31,6 +36,8 @@ export default class Truck extends Vehicle {
 
   refreshPosition = () => {
     if (!this.game.isRecovery) {
+      console.log("NORMALNA JAZDA");
+
       if (this.position.y < this.game.gameHeight - 200) {
         if (
           this.game.player.moves.has("UP") ||
@@ -59,6 +66,12 @@ export default class Truck extends Vehicle {
   };
 
   recoveryMode = () => {
+    console.log(this.position);
+
+    console.log(
+      this.position.y >= this.game.gameHeight - 8 * this.game.playerHeight &&
+        !this.isReady
+    );
     //animation of the truck
     let startEndPoints = this.game.background.getRoadStartEndPoints(
       this.game.gameHeight - 100
@@ -88,6 +101,9 @@ export default class Truck extends Vehicle {
         this.throwCarAway();
       } else if (this.afterCar) {
         this.game.player.getOutFromTruck();
+        setTimeout(() => {
+          this.resetSetOfTruck();
+        }, 3000);
       }
     }
 
