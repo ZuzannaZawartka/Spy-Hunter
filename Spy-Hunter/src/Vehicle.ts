@@ -125,7 +125,7 @@ export default class Vehicle {
       this.game.context
     );
 
-    // if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+    //if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
   };
 
   moveAfterHit = (
@@ -136,18 +136,13 @@ export default class Vehicle {
     if (vehicle.isCivilian && !opponent.isCivilian) {
       //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
       if (vehicle.vehicleHitAction[directionIndex].x > 0)
-        vehicle.position.x -=
-          vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
-      else
-        vehicle.position.x +=
-          vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
+        vehicle.position.x -= vehicle.vehicleHitAction[directionIndex].x / 2;
+      else vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x / 2;
       console.log(vehicle.vehicleHitAction[directionIndex].x);
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
-      opponent.position.x +=
-        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
+      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x / 2;
     } else {
-      opponent.position.x +=
-        vehicle.vehicleHitAction[directionIndex].x / (this.bouncePower / 4);
+      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
     }
   };
 
@@ -158,7 +153,7 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.collisionDifferenceLimit / 2 //      this.collisionDifferenceLimit
+      this.collisionDifferenceLimit * (3 / 2) //      this.collisionDifferenceLimit
     );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);

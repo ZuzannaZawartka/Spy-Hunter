@@ -13,6 +13,7 @@ export default class Player extends Vehicle {
   moves: Set<String>;
   collisionDifferenceLimit: number;
   beforeMove: boolean;
+  isAlive: boolean;
   life: number;
 
   constructor(width: number, height: number, game: Game) {
@@ -30,6 +31,7 @@ export default class Player extends Vehicle {
     this.collisionDifferenceLimit = 15;
     this.isCivilian = false;
     this.beforeMove = true;
+    this.isAlive = true;
     this.life = 1; // number of live
 
     this.resizePLayer();
@@ -54,10 +56,11 @@ export default class Player extends Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
     this.isActive = false;
+    this.isAlive = false;
     this.speed = 0;
-    // this.position.y = 1100;
     if (this.game.timeNoDeath > 0) {
       this.game.restartGame();
+      // this.game.restartGame();
     } else {
       if (this.life > 0) {
         this.game.restartGame();
@@ -94,7 +97,7 @@ export default class Player extends Vehicle {
   }
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (!this.beforeMove || !this.isActive)
+    if (this.beforeMove == false)
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,

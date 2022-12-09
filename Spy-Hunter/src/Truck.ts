@@ -15,7 +15,7 @@ export default class Truck extends Vehicle {
     this.isReady = false; // czy jest gotowy do cofania zeby wyrzucic
     this.afterCar = false; // czy car zostal wyrzucony
     this.create();
-    this.createVehicle(truck.find((el) => el.id == 0)!);
+    this.createVehicle(truck.find((el) => el.id == 3)!);
   }
 
   resetSetOfTruck = () => {
@@ -66,12 +66,7 @@ export default class Truck extends Vehicle {
   };
 
   recoveryMode = () => {
-    console.log(this.position);
-
-    console.log(
-      this.position.y >= this.game.gameHeight - 8 * this.game.playerHeight &&
-        !this.isReady
-    );
+    this.game.player.beforeMove = true;
     //animation of the truck
     let startEndPoints = this.game.background.getRoadStartEndPoints(
       this.game.gameHeight - 100
@@ -121,7 +116,7 @@ export default class Truck extends Vehicle {
   };
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (!this.game.isRecovery)
+    if (this.game.player.isAlive && !this.game.player.beforeMove)
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,

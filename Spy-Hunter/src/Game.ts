@@ -114,6 +114,7 @@ export default class Game {
     this.isGameplay = false;
     this.isRecovery = true;
     this.vehicles.truckRecovery();
+    this.player.position.y = 900;
     console.log(this.vehicles.vehicles);
   };
 
@@ -121,6 +122,7 @@ export default class Game {
     this.isGameplay = true;
     this.isRecovery = false;
     this.player.isActive = true;
+    this.player.isAlive = true;
     this.noDeathTimer();
   };
 
@@ -178,6 +180,7 @@ export default class Game {
   };
 
   animate = () => {
+    console.log(this.vehicles.vehicles);
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();

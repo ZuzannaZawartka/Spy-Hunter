@@ -31,8 +31,9 @@ export default class Vehicles {
 
   truckRecovery = () => {
     console.log("tak");
-    if (this.getVehicle("truck") == undefined)
-      this.vehicles.push(new Truck(this.game));
+    //if (this.getVehicle("truck") == undefined)
+    this.deleteSpecificTypeOfObject("truck");
+    this.vehicles.push(new Truck(this.game));
   };
 
   createTruck = () => {

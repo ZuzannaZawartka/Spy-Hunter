@@ -58,7 +58,7 @@ export default class Collision {
     //   power =
     //     vehicle.bouncePower * (Math.abs(vehicle.speed) / 2 / vehicle.maxSpeed);
     // else
-    power = 3 * vehicle.bouncePower * (Math.abs(30) / vehicle.maxSpeed);
+    power = vehicle.bouncePower * (Math.abs(30) / vehicle.maxSpeed);
 
     return [
       { x: -power, y: 0 },
@@ -68,7 +68,7 @@ export default class Collision {
       { x: -power, y: 0 },
 
       {
-        x: power,
+        x: (3 / 2) * power,
         y: 0,
       }, //first 3 collison point left up corner center and right
 
@@ -77,7 +77,7 @@ export default class Collision {
         x: 0,
         y: 0,
       },
-      { x: power, y: 0 }, //first 3 collison point left up corner center and right
+      { x: (3 / 2) * power, y: 0 }, //first 3 collison point left up corner center and right
     ];
   };
 
@@ -211,9 +211,9 @@ export default class Collision {
 
         if (collisonGroup?.action == "vibrations") {
           if (leftSide.includes(index)) {
-            move -= power / vehicle.bouncePower;
+            move -= 3;
           } else if (rightSide.includes(index)) {
-            move += power / vehicle.bouncePower;
+            move += 3;
           }
         }
       }
