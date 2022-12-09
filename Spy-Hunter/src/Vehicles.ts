@@ -33,11 +33,18 @@ export default class Vehicles {
     console.log("tak");
     //if (this.getVehicle("truck") == undefined)
     this.deleteSpecificTypeOfObject("truck");
-    this.vehicles.push(new Truck(this.game));
+    this.vehicles.push(new Truck(this.game, 3));
   };
 
   createTruck = () => {
-    this.vehicles.push(new Truck(this.game));
+    this.vehicles.push(new Truck(this.game, 3));
+    this.truck = this.getVehicle("truck")!;
+  };
+
+  createTruckWithLadder = () => {
+    let truck = new Truck(this.game, 3);
+    truck.createOnTop();
+    this.vehicles.push(truck);
     this.truck = this.getVehicle("truck")!;
   };
 

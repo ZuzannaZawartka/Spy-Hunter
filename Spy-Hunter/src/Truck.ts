@@ -6,7 +6,7 @@ export default class Truck extends Vehicle {
   type: string;
   isReady: boolean;
   afterCar: boolean;
-  constructor(game: Game) {
+  constructor(game: Game, number: number) {
     super(40, 80, game);
     this.maxSpeed = 40;
     this.isCivilian = true;
@@ -15,7 +15,7 @@ export default class Truck extends Vehicle {
     this.isReady = false; // czy jest gotowy do cofania zeby wyrzucic
     this.afterCar = false; // czy car zostal wyrzucony
     this.create();
-    this.createVehicle(truck.find((el) => el.id == 3)!);
+    this.createVehicle(truck.find((el) => el.id == number)!);
   }
 
   resetSetOfTruck = () => {
@@ -31,6 +31,17 @@ export default class Truck extends Vehicle {
       x: startEndPoints.startPoint!,
 
       y: this.game.gameHeight,
+    };
+  };
+
+  createOnTop = () => {
+    let startEndPoints = this.game.background.getRoadStartEndPoints(
+      this.game.gameHeight - 100
+    );
+    this.position = {
+      x: startEndPoints.startPoint!,
+
+      y: -50,
     };
   };
 
@@ -123,7 +134,7 @@ export default class Truck extends Vehicle {
         context,
         this.position,
         this.size,
-        this.collisionDifferenceLimit * (3 / 2) //      this.collisionDifferenceLimit
+        this.collisionDifferenceLimit //      this.collisionDifferenceLimit
       );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);

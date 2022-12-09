@@ -174,13 +174,13 @@ export default class Game {
 
       if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
-        this.vehicles.createCivilian();
+
+        //this.vehicles.createTruckWithLadder();
       }
     }
   };
 
   animate = () => {
-    console.log(this.vehicles.vehicles);
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();

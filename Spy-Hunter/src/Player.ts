@@ -28,7 +28,7 @@ export default class Player extends Vehicle {
     this.acceleration = 0.4;
     this.turnDelay = 50;
     this.bulletSpeed = this.speed + 10;
-    this.collisionDifferenceLimit = 15;
+    this.collisionDifferenceLimit = 5;
     this.isCivilian = false;
     this.beforeMove = true;
     this.isAlive = true;
@@ -155,6 +155,7 @@ export default class Player extends Vehicle {
 
       if (!this.game.isBlockedCountingPoints) this.game.distance += this.speed; // distance counting to points if player killed civile block earning points
 
+      console.log("PUNKTY");
       this.game.addPoints();
     } else if (!this.isActive && this.game.isGameplay) {
       if (this.position.y < this.game.gameHeight) {

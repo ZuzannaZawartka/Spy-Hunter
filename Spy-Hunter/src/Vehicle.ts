@@ -36,7 +36,7 @@ export default class Vehicle {
     this.lastSignVibration = 1;
     this.isActive = true;
     this.environment = 150;
-    this.collisionDifferenceLimit = 15;
+    this.collisionDifferenceLimit = 5;
     this.isCivilian = false;
     this.type = undefined;
   }
@@ -76,6 +76,8 @@ export default class Vehicle {
       this.size.x,
       this.size.y
     ).data;
+
+    console.log(data);
 
     return this.game.collision.checkTypeOfCollision(data);
   };
@@ -131,18 +133,18 @@ export default class Vehicle {
   moveAfterHit = (
     vehicle: Vehicle,
     opponent: Vehicle,
-    directionIndex: number
+    direction: { x: number; y: number }
   ) => {
     if (vehicle.isCivilian && !opponent.isCivilian) {
       //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
-      if (vehicle.vehicleHitAction[directionIndex].x > 0)
-        vehicle.position.x -= vehicle.vehicleHitAction[directionIndex].x / 2;
-      else vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x / 2;
-      console.log(vehicle.vehicleHitAction[directionIndex].x);
+      if (direction.x > 0) vehicle.position.x -= direction.x;
+      else vehicle.position.x += direction.x;
+      console.log(direction.x);
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
-      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x / 2;
+      opponent.position.x += direction.x;
     } else {
-      opponent.position.x += vehicle.vehicleHitAction[directionIndex].x;
+      opponent.position.x += direction.x / 2;
+      vehicle.position.x -= direction.x / 2;
     }
   };
 
@@ -153,7 +155,7 @@ export default class Vehicle {
       context,
       this.position,
       this.size,
-      this.collisionDifferenceLimit * (3 / 2) //      this.collisionDifferenceLimit
+      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
     );
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
