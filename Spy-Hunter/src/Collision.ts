@@ -96,6 +96,7 @@ export default class Collision {
     );
 
     //pick every point of collison
+
     this.checkColorCollison(vehicle, collisionPoints, context);
     this.checkObjectCollision(vehicle);
     this.checkBulletCollision(vehicle);
@@ -148,7 +149,6 @@ export default class Collision {
 
   checkBulletCollision = (vehicle: Vehicle) => {
     if (vehicle != this.game.player) {
-      // console.log(vehicle);
       this.game.bulletController.bullets.forEach((element: Bullet) => {
         if (
           this.checkCollisionPosition(vehicle.position, vehicle.size, element)
@@ -176,15 +176,6 @@ export default class Collision {
   };
 
   checkTypeOfCollision = (data: Uint8ClampedArray) => {
-    console.log(data[0], data[1], data[2]);
-    console.log(
-      collisionColors.find(
-        (element) =>
-          element.RED == data[0] &&
-          element.GREEN == data[1] &&
-          element.BLUE == data[2]
-      )
-    );
     return collisionColors.find(
       (element) =>
         element.RED == data[0] &&
@@ -194,11 +185,9 @@ export default class Collision {
   };
 
   checkIsColorCollison = (
-    vehicle: Vehicle,
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
-    let power = vehicle.vehicleHitAction[2].x * 2;
     let leftSide = [0, 3, 5];
     let rightSide = [2, 4, 7];
     let move = 0;
@@ -213,26 +202,27 @@ export default class Collision {
 
       //checking collisions type and their groups
       let collisionType = this.checkTypeOfCollision(data);
+
       if (collisionType != undefined) {
         //checking group of collision
         let collisonGroup = colorsCollisionGroups.find((element) =>
           element.colors.includes(collisionType!.id)
         );
 
-        if (collisonGroup?.action == "vibrations") {
+        if (
+          collisonGroup?.action == "vibrations" ||
+          collisonGroup?.action == "death"
+        ) {
           if (leftSide.includes(index)) {
-            move -= 5;
-            return move;
+            move -= 5 * this.collisionDifferenceLimit;
           } else if (rightSide.includes(index)) {
-            move += 5;
-            return move;
+            move += 5 * this.collisionDifferenceLimit;
           }
         }
       }
     });
 
-    console.log("odbicie:" + move);
-    return 0;
+    return move;
   };
 
   checkSideOfVehicleCollision = (vehicle: Vehicle, opponent: Vehicle) => {
@@ -248,7 +238,6 @@ export default class Collision {
           opponent
         )
       ) {
-        console.log("dgfdekhjefkj", index);
         let move = vehicle.vehicleHitAction[index];
         if (moveResult.x == 0)
           moveResult.x =
@@ -264,7 +253,6 @@ export default class Collision {
         if (moveResult.y == 0) moveResult.y = move.y;
       }
     });
-    console.log(moveResult);
     vehicle.moveAfterHit(vehicle, opponent, moveResult);
   };
 
@@ -278,9 +266,6 @@ export default class Collision {
         ) &&
         vehicle != opponents
       ) {
-        //console.log(vehicle);
-        //console.log(vehicle.size);
-        // console.log(opponents);
         this.checkSideOfVehicleCollision(vehicle, opponents);
       }
     });

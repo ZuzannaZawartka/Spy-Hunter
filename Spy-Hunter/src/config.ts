@@ -27,7 +27,7 @@ const collisionColors = [
 
 const colorsCollisionGroups = [
   { id: 1, action: "noCollision", colors: [1, 7, 8] },
-  { id: 2, action: "vibrations", colors: [2, 3] },
+  { id: 2, action: "vibrations", colors: [2] },
   { id: 3, action: "death", colors: [4, 5, 6, 9] },
   { id: 4, action: "skid", colors: [10] },
 ];

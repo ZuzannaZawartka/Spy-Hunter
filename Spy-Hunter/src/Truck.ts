@@ -66,7 +66,6 @@ export default class Truck extends Vehicle {
       }
       this.position.y -= this.speed / this.maxSpeed;
       this.position.x -= this.game.collision.checkIsColorCollison(
-        this,
         this.collisionPoints,
         this.game.context
       );
@@ -109,11 +108,11 @@ export default class Truck extends Vehicle {
         this.game.player.getOutFromTruck();
         setTimeout(() => {
           this.resetSetOfTruck();
-        }, 3000);
+        }, 4000);
       }
     }
 
-    if (this.position.x <= startEndPoints.endPoint! - this.size.x) {
+    if (this.position.x <= startEndPoints.endPoint! - (3 / 2) * this.size.x) {
       this.position.x += this.speed;
     }
   };

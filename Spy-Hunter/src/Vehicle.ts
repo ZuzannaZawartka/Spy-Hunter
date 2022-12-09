@@ -36,7 +36,7 @@ export default class Vehicle {
     this.lastSignVibration = 1;
     this.isActive = true;
     this.environment = 150;
-    this.collisionDifferenceLimit = 5;
+    this.collisionDifferenceLimit = 10;
     this.isCivilian = false;
     this.type = undefined;
   }
@@ -76,9 +76,6 @@ export default class Vehicle {
       this.size.x,
       this.size.y
     ).data;
-
-    console.log(data);
-
     return this.game.collision.checkTypeOfCollision(data);
   };
 
@@ -122,7 +119,6 @@ export default class Vehicle {
     this.position.y -= this.speed / this.maxSpeed;
 
     this.position.x -= this.game.collision.checkIsColorCollison(
-      this,
       this.collisionPoints,
       this.game.context
     );
@@ -139,7 +135,6 @@ export default class Vehicle {
       //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
       if (direction.x > 0) vehicle.position.x -= direction.x;
       else vehicle.position.x += direction.x;
-      console.log(direction.x);
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
     } else {

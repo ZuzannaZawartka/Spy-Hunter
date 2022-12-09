@@ -154,19 +154,15 @@ export default class Player extends Vehicle {
       }
 
       if (!this.game.isBlockedCountingPoints) this.game.distance += this.speed; // distance counting to points if player killed civile block earning points
-
-      console.log("PUNKTY");
       this.game.addPoints();
     } else if (!this.isActive && this.game.isGameplay) {
       if (this.position.y < this.game.gameHeight) {
-        console.log("DODAWANIE");
         this.position.y += this.game.recoverySpeed;
       }
     }
   };
 
   killedCivile = () => {
-    console.log("is civilian");
     this.game.isBlockedCountingPoints = true;
 
     setTimeout(() => {
