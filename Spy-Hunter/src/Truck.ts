@@ -6,14 +6,20 @@ export default class Truck extends Vehicle {
   type: string;
   isReady: boolean;
   afterCar: boolean;
+  isWaitingForPlayer: boolean;
+  frameX: number;
+
   constructor(game: Game, number: number) {
     super(40, 80, game);
-    this.maxSpeed = 40;
+    this.maxSpeed = 5;
     this.isCivilian = true;
     this.type = "truck";
     this.speed = 4;
+    this.frameX = 0; //frame x to spirte
     this.isReady = false; // czy jest gotowy do cofania zeby wyrzucic
+    this.isWaitingForPlayer = false;
     this.afterCar = false; // czy car zostal wyrzucony
+
     this.create();
     this.createVehicle(truck.find((el) => el.id == number)!);
   }
@@ -21,6 +27,7 @@ export default class Truck extends Vehicle {
   resetSetOfTruck = () => {
     this.isReady = false;
     this.afterCar = false;
+    this.isWaitingForPlayer = false;
   };
 
   create = () => {
@@ -47,29 +54,55 @@ export default class Truck extends Vehicle {
 
   refreshPosition = () => {
     if (!this.game.isRecovery) {
-      console.log("NORMALNA JAZDA");
-
-      if (this.position.y < this.game.gameHeight - 200) {
+      if (this.position.y < this.game.gameHeight - 300) {
         if (
           this.game.player.moves.has("UP") ||
-          this.game.player.speed >= this.game.player.maxSpeed
+          this.game.player.speed >= this.game.player.maxSpeed / 1.5
         ) {
-          this.speed--;
+          this.speed -= 0.15;
         } else if (
           this.game.player.moves.has("DOWN") ||
-          this.game.player.speed <= this.game.player.maxSpeed / 3
+          this.game.player.speed <= this.game.player.maxSpeed / 2
         ) {
-          this.speed++;
+          this.speed += 0.25;
         }
       } else {
-        this.speed++;
+        if (this.game.player.speed >= this.game.player.maxSpeed) {
+          this.speed -= 0.2;
+        } else {
+          this.speed += 0.4;
+        }
       }
-      this.position.y -= this.speed / this.maxSpeed;
+      this.position.y -= this.speed / 2;
       this.position.x -= this.game.collision.checkIsColorCollison(
         this.collisionPoints,
         this.game.context
       );
       if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+
+      // if (this.isWaitingForPlayer) {
+      //   if (
+      //     this.game.player.position.x + this.game.player.size.x / 2 >
+      //       this.position.x -
+      //         this.game.collision.collisionDifferenceLimit * 3 &&
+      //     this.game.player.position.x + this.game.player.size.x / 2 <
+      //       this.position.x +
+      //         this.size.x +
+      //         this.game.collision.collisionDifferenceLimit * 3 &&
+      //     this.position.y + this.size.y - this.game.player.position.y > 0 &&
+      //     this.position.y + this.size.y - this.game.player.position.y <
+      //       this.game.collision.collisionDifferenceLimit * 100
+      //   )
+      //   {
+      //     console.log("WJAZD KURWAAA");
+      //     this.game.player.isActive = false;
+      //     this.game.player.isCollisionTurnOn = false;
+      //     //this.game.isRecovery = true;
+      //     if (this.game.player.position.y < this.position.y - 20) {
+      //       this.game.player.position.y++;
+      //     }
+      //   }
+      // }
     } else {
       this.recoveryMode();
     }
@@ -140,8 +173,19 @@ export default class Truck extends Vehicle {
 
     this.refreshPosition();
 
+    if (this.game.gameFrame % this.game.staggerFrames == 0) {
+      if (this.frameX < 1)
+        this.frameX++; // to 1 because we have 2 images to display
+      else this.frameX = 0;
+    }
+    console.log(this.frameX);
+
     context.drawImage(
       this.img!,
+      this.frameX * this.size.x,
+      0,
+      this.size.x,
+      this.size.y,
       this.position.x,
       this.position.y,
       this.size.x,

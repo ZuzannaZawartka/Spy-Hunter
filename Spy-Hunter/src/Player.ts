@@ -15,6 +15,7 @@ export default class Player extends Vehicle {
   beforeMove: boolean;
   isAlive: boolean;
   life: number;
+  isCollisionTurnOn: boolean;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
@@ -24,14 +25,15 @@ export default class Player extends Vehicle {
     this.maxSpeed = 35;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
-    this.isActive = true;
+    this.isActive = true; // czy możemy sterować
     this.acceleration = 0.4;
     this.turnDelay = 50;
     this.bulletSpeed = this.speed + 10;
     this.collisionDifferenceLimit = 5;
     this.isCivilian = false;
-    this.beforeMove = true;
-    this.isAlive = true;
+    this.isCollisionTurnOn = true;
+    this.beforeMove = true; // czy wykonał pierwszy ruch
+    this.isAlive = true; // czy umarł
     this.life = 1; // number of live
 
     this.resizePLayer();

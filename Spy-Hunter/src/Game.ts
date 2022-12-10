@@ -28,6 +28,7 @@ export default class Game {
   public pointsForWater: number;
   public timeNoDeath: number;
   private timer: undefined | number;
+  public gameFrame: number;
 
   public background: Background;
   public player: Player;
@@ -41,6 +42,7 @@ export default class Game {
   public animation: number | undefined;
   public isBlockedCountingPoints: boolean;
   public recoverySpeed: number;
+  public staggerFrames: number;
 
   constructor(
     gameWidth: number,
@@ -71,6 +73,8 @@ export default class Game {
     this.animation = undefined;
     this.timeNoDeath = 1000;
     this.timer = undefined;
+    this.gameFrame = 0;
+    this.staggerFrames = 20;
 
     this.background = new Background(this);
     this.player = new Player(40, 80, this);
@@ -106,6 +110,7 @@ export default class Game {
     this.gui!.hideMenu();
     this.animate();
     this.vehicles.createTruck();
+    // this.vehicles.createHelicopter();
   };
 
   restartGame = () => {
@@ -124,6 +129,7 @@ export default class Game {
     this.player.isActive = true;
     this.player.isAlive = true;
     this.noDeathTimer();
+    this.vehicles.createHelicopter();
   };
 
   recovery = () => {
@@ -175,7 +181,7 @@ export default class Game {
       if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
 
-        //this.vehicles.createTruckWithLadder();
+        this.vehicles.createTruckWithLadder();
       }
     }
   };
@@ -190,6 +196,8 @@ export default class Game {
     this.gui.refreshGui();
     this.vehicles.draw(this.context);
     this.player.update();
+
+    this.gameFrame++;
 
     if (this.isGameplay || this.isRecovery) {
       this.animation = requestAnimationFrame(this.animate);

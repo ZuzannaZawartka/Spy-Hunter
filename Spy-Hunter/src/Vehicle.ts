@@ -22,6 +22,7 @@ export default class Vehicle {
   moves: Set<String>;
   img: HTMLImageElement | undefined | CanvasImageSource;
   type: undefined | string;
+  isCollison: boolean;
 
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
@@ -39,6 +40,7 @@ export default class Vehicle {
     this.collisionDifferenceLimit = 10;
     this.isCivilian = false;
     this.type = undefined;
+    this.isCollison = true;
   }
 
   createPlayer = () => {
@@ -57,6 +59,7 @@ export default class Vehicle {
     this.img.height = vehicle!.height;
     this.size = { x: vehicle!.width, y: vehicle!.height };
     this.type = vehicle.type;
+    this.isCollison = vehicle!.collision;
   };
 
   death = () => {
@@ -101,29 +104,33 @@ export default class Vehicle {
   };
 
   refreshPosition = () => {
-    if (this.position.y < this.game.gameHeight - 200) {
+    console.log("NORMALNA JAZDA");
+
+    if (this.position.y < this.game.gameHeight - 300) {
       if (
         this.game.player.moves.has("UP") ||
         this.game.player.speed >= this.game.player.maxSpeed
       ) {
-        this.speed--;
+        this.speed -= 0.25;
       } else if (
         this.game.player.moves.has("DOWN") ||
-        this.game.player.speed <= this.game.player.maxSpeed / 3
+        this.game.player.speed <= this.game.player.maxSpeed / 4
       ) {
-        this.speed++;
+        this.speed += 0.25;
       }
     } else {
-      this.speed++;
+      if (this.game.player.speed >= this.game.player.maxSpeed) {
+        this.speed -= 0.2;
+      } else {
+        this.speed += 0.4;
+      }
     }
-    this.position.y -= this.speed / this.maxSpeed;
-
+    this.position.y -= this.speed / 2;
     this.position.x -= this.game.collision.checkIsColorCollison(
       this.collisionPoints,
       this.game.context
     );
-
-    //if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+    if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
   };
 
   moveAfterHit = (

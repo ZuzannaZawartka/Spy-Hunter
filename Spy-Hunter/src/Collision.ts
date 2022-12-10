@@ -111,7 +111,7 @@ export default class Collision {
     context: CanvasRenderingContext2D
   ) => {
     collisionPoints.forEach((collisionPoint) => {
-      const data = context.getImageData(
+      let data = context.getImageData(
         collisionPoint.x,
         collisionPoint.y,
         2,
@@ -193,32 +193,36 @@ export default class Collision {
     let move = 0;
 
     collisionPoints.forEach((collisionPoint, index) => {
-      const data = context.getImageData(
-        collisionPoint.x,
-        collisionPoint.y,
-        2,
-        2
-      ).data;
+      try {
+        const data = context.getImageData(
+          collisionPoint.x,
+          collisionPoint.y,
+          2,
+          2
+        ).data;
 
-      //checking collisions type and their groups
-      let collisionType = this.checkTypeOfCollision(data);
+        //checking collisions type and their groups
+        let collisionType = this.checkTypeOfCollision(data);
 
-      if (collisionType != undefined) {
-        //checking group of collision
-        let collisonGroup = colorsCollisionGroups.find((element) =>
-          element.colors.includes(collisionType!.id)
-        );
+        if (collisionType != undefined) {
+          //checking group of collision
+          let collisonGroup = colorsCollisionGroups.find((element) =>
+            element.colors.includes(collisionType!.id)
+          );
 
-        if (
-          collisonGroup?.action == "vibrations" ||
-          collisonGroup?.action == "death"
-        ) {
-          if (leftSide.includes(index)) {
-            move -= 5 * this.collisionDifferenceLimit;
-          } else if (rightSide.includes(index)) {
-            move += 5 * this.collisionDifferenceLimit;
+          if (
+            collisonGroup?.action == "vibrations" ||
+            collisonGroup?.action == "death"
+          ) {
+            if (leftSide.includes(index)) {
+              move -= 5 * this.collisionDifferenceLimit;
+            } else if (rightSide.includes(index)) {
+              move += 5 * this.collisionDifferenceLimit;
+            }
           }
         }
+      } catch (error) {
+        console.log(error);
       }
     });
 
@@ -264,7 +268,8 @@ export default class Collision {
           vehicle.size,
           opponents
         ) &&
-        vehicle != opponents
+        vehicle != opponents &&
+        opponents.isCollison == true
       ) {
         this.checkSideOfVehicleCollision(vehicle, opponents);
       }

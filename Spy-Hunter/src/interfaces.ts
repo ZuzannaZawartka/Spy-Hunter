@@ -25,6 +25,7 @@ interface gameObjects {
   height: number;
   maxSpeed: number;
   isCivilian: boolean;
+  collision: boolean;
 }
 
 export type { size, coords, color, gameObjects };
