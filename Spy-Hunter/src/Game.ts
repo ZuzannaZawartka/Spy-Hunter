@@ -110,7 +110,6 @@ export default class Game {
     this.gui!.hideMenu();
     this.animate();
     this.vehicles.createTruck();
-    // this.vehicles.createHelicopter();
   };
 
   restartGame = () => {
@@ -180,8 +179,8 @@ export default class Game {
 
       if ((this.points % 200) * this.points == 0) {
         this.vehicles.createCivilian();
-
-        this.vehicles.createTruckWithLadder();
+        this.vehicles.createHelicopter();
+        //this.vehicles.createTruckWithLadder();
       }
     }
   };

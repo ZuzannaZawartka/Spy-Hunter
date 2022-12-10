@@ -1,5 +1,5 @@
 import Bullet from "./Bullet";
-import { collisionColors, colorsCollisionGroups } from "./config";
+import { collisionColors, colorsCollisionGroups, obstacles } from "./config";
 import Game from "./Game";
 import { coords } from "./interfaces";
 import Obstacle from "./Obstacle";
@@ -139,10 +139,13 @@ export default class Collision {
       if (
         this.checkCollisionPosition(vehicle.position, vehicle.size, element)
       ) {
-        //TO DO PRZEROBIENIA
         element.useObstacle();
+        if (element.type == "granade" && !element.used) {
+          vehicle.death();
+        } else if (!element.used) {
+          vehicle.skid(element);
+        }
         //Jakis dzialanie na obstacle
-        vehicle.skid(element);
       }
     });
   };

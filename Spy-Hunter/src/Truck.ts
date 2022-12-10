@@ -178,7 +178,7 @@ export default class Truck extends Vehicle {
         this.frameX++; // to 1 because we have 2 images to display
       else this.frameX = 0;
     }
-    console.log(this.frameX);
+    //console.log(this.frameX);
 
     context.drawImage(
       this.img!,

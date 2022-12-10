@@ -1,6 +1,7 @@
 import Game from "./Game";
 import Obstacle from "./Obstacle";
 import { obstacles } from "./config";
+import { coords } from "./interfaces";
 
 export default class Obstacles {
   game: Game;
@@ -27,6 +28,7 @@ export default class Obstacles {
       this.obstacles.push(
         new Obstacle(
           this.game,
+          paddle.type,
           {
             x: Math.floor(
               Math.random() *
@@ -41,6 +43,26 @@ export default class Obstacles {
           { x: paddle.width, y: paddle.height },
           paddle.imgSrc,
           paddle.afterCollisionImgSrc
+        )
+      );
+    }
+  };
+
+  generateGranade = (position: coords) => {
+    let granade = obstacles.find((obstacle) => obstacle.type == "granade");
+
+    if (granade) {
+      this.obstacles.push(
+        new Obstacle(
+          this.game,
+          granade.type,
+          {
+            x: position.x,
+            y: position.y,
+          },
+          { x: granade.width, y: granade.height },
+          granade.imgSrc,
+          granade.afterCollisionImgSrc
         )
       );
     }

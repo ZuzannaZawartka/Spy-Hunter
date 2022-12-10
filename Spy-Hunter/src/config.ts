@@ -45,7 +45,7 @@ const obstacles = [
     id: 1,
     type: "granade",
     imgSrc: "./graphics/obstacles/granade.png",
-    afterCollisionImgSrc: "./graphics/obstacles/granade.png",
+    afterCollisionImgSrc: "./graphics/obstacles/granade2.png",
     width: 60,
     height: 36,
   },

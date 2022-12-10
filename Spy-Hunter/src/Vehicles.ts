@@ -8,13 +8,12 @@ import Helicopter from "./Helicopter";
 export default class Vehicles {
   game: Game;
   vehicles: Vehicle[];
-  truck: undefined | Vehicle | Truck;
+
   helicopter: undefined | Helicopter | Vehicle;
 
   constructor(game: Game) {
     this.game = game;
     this.vehicles = [];
-    this.truck = undefined;
     this.reset();
   }
 
@@ -39,12 +38,10 @@ export default class Vehicles {
 
   createTruck = () => {
     this.vehicles.push(new Truck(this.game, 0));
-    this.truck = this.getVehicle("truck")!;
   };
 
   createHelicopter = () => {
     this.vehicles.push(new Helicopter(this.game));
-    this.helicopter = this.getVehicle("helicopter")!;
   };
 
   createTruckWithLadder = () => {
@@ -53,7 +50,6 @@ export default class Vehicles {
       truck.isWaitingForPlayer = true;
       truck.createOnTop();
       this.vehicles.push(truck);
-      this.truck = this.getVehicle("truck")!;
     }
   };
 
@@ -61,8 +57,6 @@ export default class Vehicles {
     this.vehicles = this.vehicles.filter(
       (vehicle) => vehicle != this.getVehicle(typeOfVehicle)
     );
-
-    if (typeOfVehicle == "truck") this.truck = undefined;
   };
 
   getVehicle = (typeOfVehicle: string) => {
@@ -76,8 +70,14 @@ export default class Vehicles {
         vehicle.position.y > this.game.gameHeight + this.game.player.environment
       )
         this.vehicles = this.vehicles.filter((element) => element != vehicle);
-      else vehicle.draw(context);
+      else if (vehicle.type != "helicopter") {
+        vehicle.draw(context);
+      }
     });
+    if (this.getVehicle("helicopter")) {
+      //to generate helicopter last
+      this.getVehicle("helicopter")?.draw(context);
+    }
 
     ///console.log(this.vehicles);
   };

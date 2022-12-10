@@ -3,6 +3,7 @@ import { coords } from "./interfaces";
 
 export default class Obstacle {
   game: Game;
+  type: string;
   position: coords;
   size: coords;
   img: HTMLImageElement;
@@ -11,12 +12,14 @@ export default class Obstacle {
   sign: number;
   constructor(
     game: Game,
+    type: string,
     position: coords,
     size: coords,
     imgSrc: string,
     afterCollisionImgSrc: string
   ) {
     this.game = game;
+    this.type = type;
     this.position = position;
     this.size = size;
     this.img = new Image();
