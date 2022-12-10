@@ -82,6 +82,7 @@ const truck = [
     maxSpeed: 20,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
   {
     id: 2,
@@ -94,6 +95,7 @@ const truck = [
     maxSpeed: 20,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
   {
     id: 3,
@@ -106,6 +108,7 @@ const truck = [
     maxSpeed: 20,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
 ];
 
@@ -120,6 +123,7 @@ const vehicles = [
     maxSpeed: 15,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
   {
     id: 1,
@@ -131,6 +135,7 @@ const vehicles = [
     maxSpeed: 10,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
   {
     id: 2,
@@ -142,6 +147,7 @@ const vehicles = [
     maxSpeed: 10,
     isCivilian: true,
     collision: true,
+    isEnemy: false,
   },
 ];
 
@@ -156,6 +162,22 @@ const helicopter = [
     maxSpeed: 15,
     isCivilian: true,
     collision: false,
+    isEnemy: true,
+  },
+];
+
+const enemies = [
+  {
+    id: 0,
+    type: "enemy",
+    imgSrc: "./graphics/vehicles/spinningEnemy2.png",
+    afterCollisionImgSrc: "none",
+    width: 70,
+    height: 98,
+    maxSpeed: 15,
+    isCivilian: true,
+    isEnemy: true,
+    collision: true,
   },
 ];
 export {
@@ -168,4 +190,5 @@ export {
   guns,
   truck,
   helicopter,
+  enemies,
 };

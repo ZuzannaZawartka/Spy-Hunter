@@ -43,6 +43,7 @@ export default class Game {
   public isBlockedCountingPoints: boolean;
   public recoverySpeed: number;
   public staggerFrames: number;
+  isPackingCar: boolean;
 
   constructor(
     gameWidth: number,
@@ -68,6 +69,7 @@ export default class Game {
     this.level = 0;
     this.isPause = false;
     this.isBlockedCountingPoints = false;
+    this.isPackingCar = false; // animation of Truck
     this.isGameplay = false;
     this.isRecovery = false; // truck drive with car
     this.animation = undefined;
@@ -113,8 +115,6 @@ export default class Game {
   };
 
   restartGame = () => {
-    console.log("RESTART");
-
     this.isGameplay = false;
     this.isRecovery = true;
     this.vehicles.truckRecovery();
@@ -125,10 +125,10 @@ export default class Game {
   startDrive = () => {
     this.isGameplay = true;
     this.isRecovery = false;
+    //this.isPackingCar = false;
     this.player.isActive = true;
     this.player.isAlive = true;
     this.noDeathTimer();
-    this.vehicles.createHelicopter();
   };
 
   recovery = () => {
@@ -173,12 +173,22 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 1000) * this.points == 0) {
+      if ((this.points % 50) * this.points == 0) {
         this.obstacles.generatePuddle();
       }
 
-      if ((this.points % 200) * this.points == 0) {
+      if ((this.points % 100) * this.points == 0) {
+        this.obstacles.generatePuddle();
+        // this.vehicles.createSpinningEnemy();
+        // this.vehicles.createCivilian();
         this.vehicles.createCivilian();
+        // this.vehicles.createHelicopter();
+        this.vehicles.createTruckWithLadder();
+      }
+
+      if ((this.points % 1000) * this.points == 0) {
+        this.vehicles.createCivilian();
+        // this.vehicles.createHelicopter();
         this.vehicles.createHelicopter();
         //this.vehicles.createTruckWithLadder();
       }

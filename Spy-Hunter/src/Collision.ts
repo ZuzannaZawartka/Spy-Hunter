@@ -100,7 +100,7 @@ export default class Collision {
     this.checkColorCollison(vehicle, collisionPoints, context);
     this.checkObjectCollision(vehicle);
     this.checkBulletCollision(vehicle);
-    this.checkVehiclesCollision(vehicle);
+    if (!this.game.isPackingCar) this.checkVehiclesCollision(vehicle);
 
     return collisionPoints;
   };
@@ -110,28 +110,30 @@ export default class Collision {
     collisionPoints: { x: number; y: number }[],
     context: CanvasRenderingContext2D
   ) => {
-    collisionPoints.forEach((collisionPoint) => {
-      let data = context.getImageData(
-        collisionPoint.x,
-        collisionPoint.y,
-        2,
-        2
-      ).data;
+    try {
+      collisionPoints.forEach((collisionPoint) => {
+        let data = context.getImageData(
+          collisionPoint.x,
+          collisionPoint.y,
+          2,
+          2
+        ).data;
 
-      //checking collisions type and their groups
-      let collisionType = this.checkTypeOfCollision(data);
-      if (collisionType != undefined) {
-        //checking group of collision
-        let collisonGroup = colorsCollisionGroups.find((element) =>
-          element.colors.includes(collisionType!.id)
-        );
+        //checking collisions type and their groups
+        let collisionType = this.checkTypeOfCollision(data);
+        if (collisionType != undefined) {
+          //checking group of collision
+          let collisonGroup = colorsCollisionGroups.find((element) =>
+            element.colors.includes(collisionType!.id)
+          );
 
-        if (collisonGroup != undefined) {
-          if (collisonGroup.action == "vibrations") vehicle.vibrations();
-          if (collisonGroup.action == "death") vehicle.death();
+          if (collisonGroup != undefined) {
+            if (collisonGroup.action == "vibrations") vehicle.vibrations();
+            if (collisonGroup.action == "death") vehicle.death();
+          }
         }
-      }
-    });
+      });
+    } catch (error) {}
   };
 
   checkObjectCollision = (vehicle: Vehicle) => {
@@ -156,7 +158,8 @@ export default class Collision {
         if (
           this.checkCollisionPosition(vehicle.position, vehicle.size, element)
         ) {
-          if (vehicle.isCivilian) this.player.killedCivile();
+          if (vehicle.isCivilian && vehicle.isEnemy == false)
+            this.player.killedCivile();
           vehicle.death();
         }
       });

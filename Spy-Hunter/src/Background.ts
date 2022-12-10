@@ -132,7 +132,11 @@ export default class Background {
       this.checkDirection();
     }
 
-    if (!this.game.player.isActive && this.game.isGameplay) {
+    if (
+      !this.game.player.isActive &&
+      this.game.isGameplay &&
+      !this.game.isPackingCar
+    ) {
       if (this.game.player.position.y < this.game.gameHeight) {
         this.position.y += this.game.recoverySpeed;
       } else {

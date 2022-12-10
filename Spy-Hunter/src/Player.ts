@@ -15,14 +15,14 @@ export default class Player extends Vehicle {
   beforeMove: boolean;
   isAlive: boolean;
   life: number;
-  isCollisionTurnOn: boolean;
+  enemyLives: number;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
 
     this.moves = new Set();
     this.speed = 5;
-    this.maxSpeed = 35;
+    this.maxSpeed = 25;
     this.maxVibrations = 8;
     this.lastSignVibration = 1;
     this.isActive = true; // czy możemy sterować
@@ -31,11 +31,11 @@ export default class Player extends Vehicle {
     this.bulletSpeed = this.speed + 10;
     this.collisionDifferenceLimit = 5;
     this.isCivilian = false;
-    this.isCollisionTurnOn = true;
     this.beforeMove = true; // czy wykonał pierwszy ruch
     this.isAlive = true; // czy umarł
     this.life = 1; // number of live
-
+    this.enemyLives = 30; // attack times
+    this.isEnemy = false;
     this.resizePLayer();
   }
 
@@ -57,6 +57,8 @@ export default class Player extends Vehicle {
 
   death = () => {
     //animacje dorobimy ze tak buch robi
+    this.resetLife();
+
     this.isActive = false;
     this.isAlive = false;
     this.speed = 0;
@@ -70,6 +72,15 @@ export default class Player extends Vehicle {
         this.game.stop();
       }
     }
+  };
+
+  resetLife = () => {
+    let inte = setTimeout(() => {
+      this.enemyLives++;
+      if (this.enemyLives >= 30) {
+        clearInterval(inte);
+      }
+    }, 500);
   };
 
   shoot = () => {
@@ -99,7 +110,7 @@ export default class Player extends Vehicle {
   }
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (this.beforeMove == false)
+    if (this.beforeMove == false || this.game.isRecovery == false)
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,
@@ -157,7 +168,11 @@ export default class Player extends Vehicle {
 
       if (!this.game.isBlockedCountingPoints) this.game.distance += this.speed; // distance counting to points if player killed civile block earning points
       this.game.addPoints();
-    } else if (!this.isActive && this.game.isGameplay) {
+    } else if (
+      !this.isActive &&
+      this.game.isGameplay &&
+      !this.game.isPackingCar
+    ) {
       if (this.position.y < this.game.gameHeight) {
         this.position.y += this.game.recoverySpeed;
       }
@@ -173,11 +188,13 @@ export default class Player extends Vehicle {
   };
 
   getOutFromTruck = () => {
+    console.log("work");
     if (
       this.position.y <=
       this.game.minPlayerArea -
         (this.speed / this.maxSpeed) * this.game.maxPlayerArea
     ) {
+      console.log("work2");
       this.position.y++;
     } else {
       this.game.startDrive();

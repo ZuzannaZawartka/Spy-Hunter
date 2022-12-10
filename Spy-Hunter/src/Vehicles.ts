@@ -4,6 +4,7 @@ import { coords } from "./interfaces";
 import Truck from "./Truck";
 import Vehicle from "./Vehicle";
 import Helicopter from "./Helicopter";
+import SpinningEnemy from "./SpinningEnemy";
 
 export default class Vehicles {
   game: Game;
@@ -44,6 +45,10 @@ export default class Vehicles {
     this.vehicles.push(new Helicopter(this.game));
   };
 
+  createSpinningEnemy = () => {
+    this.vehicles.push(new SpinningEnemy(this.game));
+  };
+
   createTruckWithLadder = () => {
     if (this.getVehicle("truck") == undefined) {
       let truck = new Truck(this.game, 2);
@@ -79,6 +84,6 @@ export default class Vehicles {
       this.getVehicle("helicopter")?.draw(context);
     }
 
-    ///console.log(this.vehicles);
+    //console.log(this.vehicles);
   };
 }

@@ -23,6 +23,8 @@ export default class Vehicle {
   img: HTMLImageElement | undefined | CanvasImageSource;
   type: undefined | string;
   isCollison: boolean;
+  isEnemy: boolean | undefined;
+  isAttacking: boolean | undefined;
 
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
@@ -41,6 +43,7 @@ export default class Vehicle {
     this.isCivilian = false;
     this.type = undefined;
     this.isCollison = true;
+    this.isAttacking = false;
   }
 
   createPlayer = () => {
@@ -60,6 +63,7 @@ export default class Vehicle {
     this.size = { x: vehicle!.width, y: vehicle!.height };
     this.type = vehicle.type;
     this.isCollison = vehicle!.collision;
+    this.isEnemy = vehicle!.isEnemy;
   };
 
   death = () => {
@@ -90,13 +94,13 @@ export default class Vehicle {
 
   skid = (element: Obstacle) => {
     let posX = Math.floor(
-      Math.random() * (this.speed / 10 + this.maxVibrations / 2) +
+      Math.random() * (this.speed / 3 + this.maxVibrations / 2) +
         this.maxVibrations / 2
     );
     this.isActive = false;
-    for (let i = 0; i < this.speed; i++) {
+    for (let i = 0; i < this.speed / 2; i++) {
       setTimeout(() => {
-        if (element.sign < 0) this.position.x += posX / this.speed;
+        if (element.sign < 0) this.position.x += posX / (this.speed / 2);
         else this.position.x -= posX / this.speed;
       }, 10);
     }
@@ -104,8 +108,6 @@ export default class Vehicle {
   };
 
   refreshPosition = () => {
-    console.log("NORMALNA JAZDA");
-
     if (this.position.y < this.game.gameHeight - 300) {
       if (
         this.game.player.moves.has("UP") ||
@@ -142,8 +144,25 @@ export default class Vehicle {
       //vehicle.position.x += vehicle.vehicleHitAction[directionIndex].x;
       if (direction.x > 0) vehicle.position.x -= direction.x;
       else vehicle.position.x += direction.x;
+
+      if (vehicle.isEnemy && vehicle.isAttacking) {
+        // vehicle.death();
+        this.game.player.enemyLives--;
+        this.game.player.resetLife();
+        if (this.game.player.enemyLives <= 0) {
+          this.game.player.death();
+        }
+      }
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
+      if (opponent.isEnemy && opponent.isAttacking) {
+        this.game.player.enemyLives--;
+        this.game.player.resetLife();
+
+        if (this.game.player.enemyLives <= 0) {
+          this.game.player.death();
+        }
+      }
     } else {
       opponent.position.x += direction.x / 2;
       vehicle.position.x -= direction.x / 2;
