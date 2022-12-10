@@ -188,13 +188,11 @@ export default class Player extends Vehicle {
   };
 
   getOutFromTruck = () => {
-    console.log("work");
     if (
       this.position.y <=
       this.game.minPlayerArea -
         (this.speed / this.maxSpeed) * this.game.maxPlayerArea
     ) {
-      console.log("work2");
       this.position.y++;
     } else {
       this.game.startDrive();

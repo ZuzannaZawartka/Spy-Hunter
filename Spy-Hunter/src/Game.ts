@@ -154,6 +154,14 @@ export default class Game {
     }
   };
 
+  getGift = (type: string) => {
+    if (type == "life") {
+      this.player.life++;
+    } else {
+      this.guns.addGun(type);
+    }
+  };
+
   noDeathTimer = () => {
     this.timer = setInterval(() => {
       this.timeNoDeath--;

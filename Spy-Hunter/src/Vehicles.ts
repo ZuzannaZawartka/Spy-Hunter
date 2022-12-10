@@ -34,7 +34,7 @@ export default class Vehicles {
   truckRecovery = () => {
     if (this.getVehicle("truck") != undefined) this.getVehicle("truck");
     this.deleteSpecificTypeOfObject("truck");
-    this.vehicles.push(new Truck(this.game, 2));
+    this.vehicles.push(new Truck(this.game, 0));
   };
 
   createTruck = () => {
@@ -51,7 +51,7 @@ export default class Vehicles {
 
   createTruckWithLadder = () => {
     if (this.getVehicle("truck") == undefined) {
-      let truck = new Truck(this.game, 2);
+      let truck = new Truck(this.game, 1);
       truck.isWaitingForPlayer = true;
       truck.createOnTop();
       this.vehicles.push(truck);
@@ -84,6 +84,6 @@ export default class Vehicles {
       this.getVehicle("helicopter")?.draw(context);
     }
 
-    //console.log(this.vehicles);
+    console.log(this.vehicles);
   };
 }

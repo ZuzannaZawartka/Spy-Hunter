@@ -2,6 +2,7 @@ import { vehicles } from "./config";
 import Game from "./Game";
 import { coords, gameObjects } from "./interfaces";
 import Obstacle from "./Obstacle";
+import Player from "./Player";
 
 export default class Vehicle {
   size: coords;
@@ -25,6 +26,9 @@ export default class Vehicle {
   isCollison: boolean;
   isEnemy: boolean | undefined;
   isAttacking: boolean | undefined;
+  lastTouch: undefined | string;
+  timeToRemberLastTouch: number;
+  currentTime: number;
 
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
@@ -44,6 +48,9 @@ export default class Vehicle {
     this.type = undefined;
     this.isCollison = true;
     this.isAttacking = false;
+    this.lastTouch = undefined;
+    this.timeToRemberLastTouch = 70;
+    this.currentTime = 0;
   }
 
   createPlayer = () => {
@@ -73,6 +80,10 @@ export default class Vehicle {
       (vehicle) => vehicle != this
     );
 
+    if (this.lastTouch != undefined) {
+      this.game.player.killedCivile();
+    }
+
     //this.game.isGameplay = false;
   };
 
@@ -90,6 +101,20 @@ export default class Vehicle {
     if (this.lastSignVibration > 0) this.position.x += -this.maxVibrations;
     else this.position.x += this.maxVibrations;
     this.lastSignVibration = -this.lastSignVibration;
+  };
+
+  setLastTouchAsAPlayer = () => {
+    this.currentTime = this.game.gameFrame;
+    this.lastTouch = "player";
+    console.log("WALNIETO");
+  };
+
+  checkTimeForLastTouch = () => {
+    console.log(this.game.gameFrame - this.currentTime);
+    if (this.game.gameFrame - this.currentTime >= this.timeToRemberLastTouch) {
+      this.lastTouch = undefined;
+      console.log("PRZEDAWNIENIE");
+    }
   };
 
   skid = (element: Obstacle) => {
@@ -146,23 +171,24 @@ export default class Vehicle {
       else vehicle.position.x += direction.x;
 
       if (vehicle.isEnemy && vehicle.isAttacking) {
-        // vehicle.death();
         this.game.player.enemyLives--;
         this.game.player.resetLife();
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
       }
+
+      vehicle.setLastTouchAsAPlayer();
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
       if (opponent.isEnemy && opponent.isAttacking) {
         this.game.player.enemyLives--;
         this.game.player.resetLife();
-
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
       }
+      vehicle.setLastTouchAsAPlayer();
     } else {
       opponent.position.x += direction.x / 2;
       vehicle.position.x -= direction.x / 2;

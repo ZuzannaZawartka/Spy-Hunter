@@ -1,5 +1,6 @@
-import { truck } from "./config";
+import { guns, truck } from "./config";
 import Game from "./Game";
+import Guns from "./Guns";
 import Vehicle from "./Vehicle";
 
 export default class Truck extends Vehicle {
@@ -9,6 +10,7 @@ export default class Truck extends Vehicle {
   frameX: number;
   isAwayCar: boolean;
   isUsed: boolean;
+  commodity: string | undefined;
 
   constructor(game: Game, number: number) {
     super(40, 80, game);
@@ -20,7 +22,17 @@ export default class Truck extends Vehicle {
     this.isUsed = false;
     this.create();
     this.createVehicle(truck.find((el) => el.id == number)!);
+    this.generateCommodity(number);
   }
+
+  generateCommodity = (number: number) => {
+    if (number == 1) {
+      this.commodity = guns.find((el) => el.id == 1)!.type;
+      console.log(this.commodity);
+    } else if (number == 2) {
+      this.commodity = "life";
+    }
+  };
 
   resetSetOfTruck = () => {
     this.isReady = false;
@@ -28,7 +40,7 @@ export default class Truck extends Vehicle {
     this.isWaitingForPlayer = false;
     this.game.isPackingCar = false;
     this.isUsed = true;
-    this.speed = this.maxSpeed / 2;
+    this.speed = this.maxSpeed / 3;
   };
 
   create = () => {
@@ -128,10 +140,10 @@ export default class Truck extends Vehicle {
         ) {
           this.game.player.position.y++; //wyjazd autka // ewentualne zycia albo achivmenty
           this.game.startDrive();
-
+          this.game.getGift(this.commodity!);
           setTimeout(() => {
             this.resetSetOfTruck();
-          }, 3000);
+          }, 2000);
         }
       }
     } else {

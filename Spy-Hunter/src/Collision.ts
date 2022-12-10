@@ -96,7 +96,7 @@ export default class Collision {
     );
 
     //pick every point of collison
-
+    vehicle.checkTimeForLastTouch();
     this.checkColorCollison(vehicle, collisionPoints, context);
     this.checkObjectCollision(vehicle);
     this.checkBulletCollision(vehicle);
