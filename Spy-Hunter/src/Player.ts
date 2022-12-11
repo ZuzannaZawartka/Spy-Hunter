@@ -18,6 +18,7 @@ export default class Player extends Vehicle {
   life: number;
   enemyLives: number;
   afterFire: boolean = false;
+  public didYouGetALife: boolean = false;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
@@ -36,7 +37,7 @@ export default class Player extends Vehicle {
     this.isCivilian = false;
     this.beforeMove = true; // czy wykonał pierwszy ruch
     this.isDeath = false; // czy umarł
-    this.life = 1; // number of live
+    this.life = 0; // number of live
     this.enemyLives = 30; // attack times
     this.isEnemy = false;
     this.resizePLayer();
@@ -50,6 +51,7 @@ export default class Player extends Vehicle {
     this.speed = 0;
     this.isActive = true;
     this.beforeMove = true;
+    this.previousImage();
   };
 
   resizePLayer = () => {
@@ -71,16 +73,26 @@ export default class Player extends Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
 
-    if (this.isActive) this.game.sound.death();
+    if (this.game.player.life <= 2 && !this.didYouGetALife) {
+      this.didYouGetALife = true;
+      this.life--;
+    }
+
+    this.game.sound.death();
+    this.game.gui.refreshLife(this.life);
+
+    setTimeout(() => {
+      this.didYouGetALife = false;
+    }, 10 * this.game.timeNoDeath);
     this.game.sound.stopMusic("soundtrack");
-    this.life--;
+
     this.isActive = false;
     this.isDeath = true;
     this.speed = 0;
     this.setFire(0);
     this.resetLife();
     if (this.game.timeNoDeath <= 0) {
-      if (this.life <= 0) {
+      if (this.life < 0) {
         this.game.stop();
       }
     }
@@ -175,6 +187,11 @@ export default class Player extends Vehicle {
     setTimeout(() => {
       this.game.isBlockedCountingPoints = false;
     }, 3000);
+  };
+
+  addLife = () => {
+    this.life++;
+    this.game.gui.refreshLife(this.life);
   };
 
   getOutFromTruck = () => {

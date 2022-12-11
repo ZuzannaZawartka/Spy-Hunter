@@ -101,8 +101,6 @@ export default class Collision {
     this.checkObjectCollision(vehicle);
     this.checkBulletCollision(vehicle);
     if (!this.game.isPackingCar) this.checkVehiclesCollision(vehicle);
-
-    console.log(this.game.isPackingCar + "pakownanko");
     return collisionPoints;
   };
 

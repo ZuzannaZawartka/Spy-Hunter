@@ -101,6 +101,7 @@ export default class Vehicle {
     this.img!.src = fire.imgSrc;
     this.size.x = fire.width;
     this.size.y = fire.height;
+    if (!this.isDeath) this.game.sound.death();
     this.isDeath = true;
   };
 
@@ -133,13 +134,13 @@ export default class Vehicle {
 
   skid = (element: Obstacle) => {
     let posX = Math.floor(
-      Math.random() * (this.speed / 3 + this.maxVibrations / 2) +
+      Math.random() * (this.speed / 5 + this.maxVibrations / 2) +
         this.maxVibrations / 2
     );
     this.isActive = false;
-    for (let i = 0; i < this.speed / 2; i++) {
+    for (let i = 0; i < this.speed / 3; i++) {
       setTimeout(() => {
-        if (element.sign < 0) this.position.x += posX / (this.speed / 2);
+        if (element.sign < 0) this.position.x += posX / (this.speed / 3);
         else this.position.x -= posX / this.speed;
       }, 10);
     }
@@ -194,8 +195,6 @@ export default class Vehicle {
         }
       }
       vehicle.setLastTouchAsAPlayer();
-
-      if (!vehicle.isEnemy) this.game.sound.collision();
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
       if (opponent.isEnemy && opponent.isAttacking) {
@@ -206,8 +205,6 @@ export default class Vehicle {
         }
       }
       vehicle.setLastTouchAsAPlayer();
-
-      if (!vehicle.isEnemy) this.game.sound.collision();
     } else {
       opponent.position.x += direction.x / 2;
       vehicle.position.x -= direction.x / 2;

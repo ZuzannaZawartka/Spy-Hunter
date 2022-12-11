@@ -1,11 +1,14 @@
+import { enemies } from "./config";
 import Game from "./Game";
 
 export default class Gui {
   game: Game;
   menu: HTMLElement | null;
+  lifeContainer: string;
   constructor(game: Game) {
     this.game = game;
     this.menu = document.getElementById("menu");
+    this.lifeContainer = "life-container";
     this.init();
   }
 
@@ -15,6 +18,18 @@ export default class Gui {
 
     document.getElementById("root-container")!.style.height =
       this.game.gameWidth * 1.15 + "px";
+  };
+
+  refreshLife = (amount: number) => {
+    document.getElementById(this.lifeContainer)!.innerHTML = "";
+    for (let i = 0; i < amount; i++) {
+      let life = document.createElement("img");
+      let config = enemies.find((element) => element.id == 1)!;
+      life.src = config.imgSrc;
+      life.width = config.width;
+      life.height = config.height;
+      document.getElementById(this.lifeContainer)?.appendChild(life);
+    }
   };
 
   refreshGui = () => {

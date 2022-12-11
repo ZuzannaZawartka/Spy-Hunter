@@ -47,6 +47,7 @@ export default class Game {
   public staggerFrames: number = 20;
   public isPackingCar: boolean = false;
   public sound: SoundManager;
+  public didYouGetAGift: boolean = false;
 
   constructor(
     gameWidth: number,
@@ -153,10 +154,20 @@ export default class Game {
   };
 
   getGift = (type: string) => {
-    if (type == "life") {
-      this.player.life++;
-    } else {
-      this.guns.addGun(type);
+    console.log(this.didYouGetAGift);
+    if (!this.didYouGetAGift) {
+      this.didYouGetAGift = true;
+      if (type == "life") {
+        console.log("ADDING");
+        this.player.addLife();
+      } else {
+        this.guns.addGun(type);
+      }
+      this.didYouGetAGift = true;
+
+      setTimeout(() => {
+        this.didYouGetAGift = false;
+      }, 10 * this.timeNoDeath);
     }
   };
 
@@ -179,34 +190,39 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 50) * this.points == 0) {
-        this.obstacles.generatePuddle();
-      }
+      if (!this.isRecovery) {
+        if ((this.points % 300) * this.points == 0) {
+          this.obstacles.generatePuddle();
+        }
 
-      if ((this.points % 300) * this.points == 0) {
-        this.obstacles.generatePuddle();
-      }
-
-      if ((this.points % 100) * this.points == 0) {
-        // this.obstacles.generatePuddle();
-        // this.vehicles.createSpinningEnemy();
-        this.vehicles.createCivilian();
-        // this.vehicles.createCivilian();
-        // this.vehicles.createHelicopter();
-        // this.vehicles.createTruckWithLadder();
-      }
-      if ((this.points % 600) * this.points == 0) {
-        //this.vehicles.createCivilian();
-        // this.vehicles.createHelicopter();
-        this.vehicles.createSpinningEnemy();
-        //this.vehicles.createTruckWithLadder();
-      }
-
-      if ((this.points % 1000) * this.points == 0) {
-        //this.vehicles.createCivilian();
-        // this.vehicles.createHelicopter();
-        this.vehicles.createHelicopter();
-        //this.vehicles.createTruckWithLadder();
+        if ((this.points % 255) * this.points == 0) {
+          // this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 510) * this.points == 0) {
+          // this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 800) * this.points == 0) {
+          //this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          this.vehicles.createSpinningEnemy();
+          //this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 1000) * this.points == 0) {
+          //this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          this.vehicles.createHelicopter();
+          //this.vehicles.createTruckWithLadder();
+        }
       }
     }
   };

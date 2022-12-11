@@ -93,7 +93,7 @@ const guns = [
   },
 ];
 
-const truck = [
+const trucks = [
   {
     id: 0,
     type: "truck",
@@ -123,7 +123,7 @@ const truck = [
   {
     id: 2,
     type: "truck",
-    imgSrc: "./graphics/vehicles/truckSpriteSheet.png",
+    imgSrc: "./graphics/vehicles/truckSpriteSheet3.png",
     amountOfGraphic: 2,
     afterCollisionImgSrc: "./graphics/vehicles/truck3.png",
     width: 74,
@@ -261,7 +261,7 @@ export {
   keymapAction,
   vehicles,
   guns,
-  truck,
+  trucks,
   helicopter,
   enemies,
   fires,

@@ -1,4 +1,4 @@
-import { fires, guns, truck } from "./config";
+import { fires, guns, trucks } from "./config";
 import Game from "./Game";
 import Vehicle from "./Vehicle";
 
@@ -20,14 +20,14 @@ export default class Truck extends Vehicle {
     this.isAwayCar = false;
     this.isUsed = false;
     this.create();
-    this.createVehicle(truck.find((el) => el.id == number)!);
+    this.createVehicle(trucks.find((el) => el.id == number)!);
     this.generateCommodity(number);
   }
 
   generateCommodity = (number: number) => {
-    if (number == 1) {
+    if (number == 2) {
       this.commodity = guns.find((el) => el.id == 1)!.type;
-    } else if (number == 2) {
+    } else if (number == 1) {
       this.commodity = "life";
     }
   };
@@ -232,11 +232,7 @@ export default class Truck extends Vehicle {
   };
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (
-      !this.game.player.isDeath &&
-      !this.game.player.beforeMove &&
-      !this.game.isPackingCar
-    )
+    if (!this.game.player.isDeath && !this.game.player.beforeMove)
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,

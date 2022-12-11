@@ -5,6 +5,7 @@ import Truck from "./Truck";
 import Vehicle from "./Vehicle";
 import Helicopter from "./Helicopter";
 import SpinningEnemy from "./SpinningEnemy";
+import { trucks } from "./config";
 
 export default class Vehicles {
   game: Game;
@@ -52,7 +53,9 @@ export default class Vehicles {
 
   createTruckWithLadder = () => {
     if (this.getVehicle("truck") == undefined) {
-      let truck = new Truck(this.game, 1);
+      let rNumber = Math.floor(Math.random() * (trucks.length - 1) + 1);
+      console.log(rNumber + "number trucka");
+      let truck = new Truck(this.game, rNumber);
       truck.isWaitingForPlayer = true;
       truck.createOnTop();
       this.vehicles.push(truck);
