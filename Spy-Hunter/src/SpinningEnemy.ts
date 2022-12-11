@@ -1,4 +1,4 @@
-import { enemies } from "./config";
+import { enemies, fires } from "./config";
 import Game from "./Game";
 import Vehicle from "./Vehicle";
 
@@ -18,7 +18,7 @@ export default class SpinningEnemy extends Vehicle {
     this.isAbleToSetCenter = false;
     this.isStartedCountingTimeToDrive = false;
     this.currentTime = 0;
-    this.timeToDrive = 500;
+    this.timeToDrive = 200;
     this.isAttacking = false;
     this.isWating = false;
     this.create();
@@ -58,7 +58,6 @@ export default class SpinningEnemy extends Vehicle {
 
     console.log(this.game.gameFrame - this.currentTime);
     if (this.game.gameFrame - this.currentTime >= this.timeToDrive) {
-      console.log("ODJAZD");
       this.isDriveAway = true;
       this.frameX = 0;
       // set img without bomb
@@ -72,51 +71,59 @@ export default class SpinningEnemy extends Vehicle {
   };
 
   refreshPosition = () => {
-    if (this.game.isRecovery == false) {
-      if (!this.isDriveAway) {
-        if (this.position.y > 3.5 * this.game.player.size.y) {
-          // jezeli enemy jest na koncu to przyspiesza
-          if (
-            this.position.y >
-            this.game.player.position.y + this.game.player.size.y
-          ) {
-            // jesli enemy jest z tylu za playerem
-            this.position.y -= this.speed;
+    if (!this.isDeath) {
+      if (!this.game.isRecovery) {
+        if (!this.isDriveAway) {
+          if (this.position.y > 3.5 * this.game.player.size.y) {
+            // jezeli enemy jest na koncu to przyspiesza
             if (
-              Math.abs(
-                this.position.y + this.size.y - this.game.player.position.y
-              ) <=
-              2 * this.game.player.size.y
+              this.position.y >
+              this.game.player.position.y + this.game.player.size.y
             ) {
+              // jesli enemy jest z tylu za playerem
               this.position.y -= this.speed;
-            }
-          } else if (
-            this.position.y + this.size.y <
-            this.game.player.position.y
-          ) {
-            //jesli enemy jest z przodu
-            if (
-              Math.abs(
-                this.position.y + this.size.y - this.game.player.position.y
-              ) <=
-              2 * this.game.player.size.y
+              if (
+                Math.abs(
+                  this.position.y + this.size.y - this.game.player.position.y
+                ) <=
+                2 * this.game.player.size.y
+              ) {
+                this.position.y -= this.speed;
+              }
+            } else if (
+              this.position.y + this.size.y <
+              this.game.player.position.y
             ) {
-              this.position.y += this.speed;
-            } else if (this.game.player.speed < this.game.player.maxSpeed / 3) {
-              this.position.y -= this.speed;
+              //jesli enemy jest z przodu
+              if (
+                Math.abs(
+                  this.position.y + this.size.y - this.game.player.position.y
+                ) <= this.game.player.size.y
+              ) {
+                this.position.y += this.speed / 2;
+              } else if (
+                this.game.player.speed <
+                this.game.player.maxSpeed / 3
+              ) {
+                this.position.y -= this.speed;
+              }
+            } else if (this.isAbleToSetCenter) {
+              if (this.position.y >= this.game.player.position.y) {
+                this.position.y -= this.speed;
+                this.isAbleToSetCenter = false;
+              }
+            } else {
+              this.setTimerToSetCenter();
+              this.attack();
             }
-          } else if (this.isAbleToSetCenter) {
-            if (this.position.y >= this.game.player.position.y) {
-              this.position.y -= this.speed;
-              this.isAbleToSetCenter = false;
-            }
+            if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
           } else {
-            this.setTimerToSetCenter();
-            this.attack();
+            this.resetTimer();
+            this.position.y -= this.speed;
           }
-          if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
         } else {
           this.resetTimer();
+
           this.position.y -= this.speed;
         }
       } else {
@@ -124,16 +131,12 @@ export default class SpinningEnemy extends Vehicle {
 
         this.position.y -= this.speed;
       }
-    } else {
-      this.resetTimer();
 
-      this.position.y -= this.speed;
+      this.position.x -= this.game.collision.checkIsColorCollison(
+        this.collisionPoints,
+        this.game.context
+      );
     }
-
-    this.position.x -= this.game.collision.checkIsColorCollison(
-      this.collisionPoints,
-      this.game.context
-    );
   };
 
   attack = () => {
@@ -167,7 +170,7 @@ export default class SpinningEnemy extends Vehicle {
         Math.abs(this.position.y - this.game.player.position.y) <
         this.game.player.size.y
       ) {
-        this.isStartedCountingTimeToDrive = false;
+        //this.isStartedCountingTimeToDrive = false;
         this.isAttacking = true;
       }
     } else {
@@ -192,13 +195,20 @@ export default class SpinningEnemy extends Vehicle {
       ((2 * this.game.gameFrame) % this.game.staggerFrames == 0 &&
         this.isAttacking) ||
       ((2 * this.game.gameFrame) % this.game.staggerFrames == 0 &&
-        this.isWating)
+        this.isWating &&
+        !this.isDeath)
     ) {
       if (this.frameX < 2)
         this.frameX++; // to 1 because we have 2 images to display
       else this.frameX = 1;
-    } else if (!this.isAttacking && !this.isWating) {
+    } else if (!this.isAttacking && !this.isWating && !this.isDeath) {
       this.frameX = 0;
+    } else {
+      if (this.game.gameFrame % this.game.staggerFrames == 0 && this.isDeath) {
+        if (this.frameX < fires.find((el) => el.id == 1)!.amountOfGraphic - 1)
+          this.frameX++; // to 1 because we have 2 images to display
+        else this.deleteFromScreen();
+      }
     }
 
     context.drawImage(

@@ -103,7 +103,11 @@ export default class Game {
     this.level = 0;
     this.isPause = false;
     this.timeNoDeath = 1000;
+
+    this.timer = undefined;
     this.background?.init();
+
+    this.vehicles.createCivilian();
   };
 
   start = () => {
@@ -137,6 +141,7 @@ export default class Game {
   };
 
   stop = () => {
+    this.isGameplay = false;
     this.isGameplay = false;
     this.gui.showMenu();
     clearInterval(this.timer);
@@ -187,7 +192,7 @@ export default class Game {
 
       if ((this.points % 100) * this.points == 0) {
         this.obstacles.generatePuddle();
-        // this.vehicles.createSpinningEnemy();
+        this.vehicles.createSpinningEnemy();
         // this.vehicles.createCivilian();
         this.vehicles.createCivilian();
         // this.vehicles.createHelicopter();

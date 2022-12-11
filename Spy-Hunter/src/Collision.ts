@@ -1,5 +1,5 @@
 import Bullet from "./Bullet";
-import { collisionColors, colorsCollisionGroups, obstacles } from "./config";
+import { collisionColors, colorsCollisionGroups } from "./config";
 import Game from "./Game";
 import { coords } from "./interfaces";
 import Obstacle from "./Obstacle";
@@ -275,7 +275,9 @@ export default class Collision {
           opponents
         ) &&
         vehicle != opponents &&
-        opponents.isCollison == true
+        opponents.isCollison == true &&
+        !opponents.isDeath &&
+        !vehicle.isDeath
       ) {
         this.checkSideOfVehicleCollision(vehicle, opponents);
       }

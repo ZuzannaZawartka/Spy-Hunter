@@ -10,7 +10,7 @@ export default class Guns {
     this.game = game;
     this.gunsContainer = "guns-container";
     this.gunsArray = [];
-    this.addGun(guns.find((element) => element.id == 0)!.type);
+    this.refreshGuns();
   }
 
   addGun = (type: string) => {
@@ -23,5 +23,10 @@ export default class Guns {
       gun.height = config.height;
       document.getElementById(this.gunsContainer)?.appendChild(gun);
     }
+  };
+
+  refreshGuns = () => {
+    this.gunsArray = [];
+    this.addGun(guns.find((element) => element.id == 0)!.type);
   };
 }

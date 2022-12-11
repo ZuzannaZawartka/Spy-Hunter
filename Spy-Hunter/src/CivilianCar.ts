@@ -28,26 +28,4 @@ export default class CivilianCar extends Vehicle {
       y: this.game.gameHeight + this.game.player.environment,
     };
   };
-  draw = (context: CanvasRenderingContext2D) => {
-    this.collisionPoints = this.game.collision.checkCollision(
-      this,
-      this.collisionPoints,
-      context,
-      this.position,
-      this.size,
-      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
-    );
-
-    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
-
-    this.refreshPosition();
-
-    context.drawImage(
-      this.img!,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
-    );
-  };
 }

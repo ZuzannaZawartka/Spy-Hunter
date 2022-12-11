@@ -29,7 +29,7 @@ export default class Gui {
     if (this.game.isBlockedCountingPoints) {
       document.getElementById(
         "timer"
-      )!.innerHTML = `<h1>YOU killed civile</h1>`;
+      )!.innerHTML = `<h1 style="color:rgb(200, 109, 57);  transform: scale(1.1, 0.6);font-size:40px">NO POINTS</h1>`;
       document.getElementById("points")!.innerHTML = ``;
     }
   };

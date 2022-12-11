@@ -23,13 +23,36 @@ const collisionColors = [
   { id: 8, ground: "water2", RED: 0, GREEN: 112, BLUE: 236 },
   { id: 9, ground: "bridge", RED: 188, GREEN: 188, BLUE: 188 },
   { id: 10, ground: "paddle", RED: 76, GREEN: 98, BLUE: 218 },
+  { id: 11, ground: "lawn3", RED: 0, GREEN: 168, BLUE: 0 },
+  { id: 12, ground: "roadsideContour", RED: 200, GREEN: 76, BLUE: 12 },
 ];
 
 const colorsCollisionGroups = [
   { id: 1, action: "noCollision", colors: [1, 7, 8] },
-  { id: 2, action: "vibrations", colors: [2] },
-  { id: 3, action: "death", colors: [4, 5, 6, 9] },
+  { id: 2, action: "vibrations", colors: [2, 12] },
+  { id: 3, action: "death", colors: [4, 5, 6, 9, 11] },
   { id: 4, action: "skid", colors: [10] },
+];
+
+const fires = [
+  {
+    id: 0,
+    type: "fire",
+    imgSrc: "./graphics/vehicles/fires.png",
+    amountOfGraphic: 5,
+    afterCollisionImgSrc: "./graphics/obstacles/puddle2.png",
+    width: 70,
+    height: 100,
+  },
+  {
+    id: 1,
+    type: "fire",
+    imgSrc: "./graphics/vehicles/fires4.png",
+    amountOfGraphic: 3,
+    afterCollisionImgSrc: "./graphics/obstacles/puddle2.png",
+    width: 70,
+    height: 100,
+  },
 ];
 
 const obstacles = [
@@ -191,4 +214,5 @@ export {
   truck,
   helicopter,
   enemies,
+  fires,
 };

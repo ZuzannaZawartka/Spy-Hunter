@@ -1,6 +1,5 @@
-import { guns, truck } from "./config";
+import { fires, guns, truck } from "./config";
 import Game from "./Game";
-import Guns from "./Guns";
 import Vehicle from "./Vehicle";
 
 export default class Truck extends Vehicle {
@@ -66,93 +65,98 @@ export default class Truck extends Vehicle {
   };
 
   refreshPosition = () => {
-    if (!this.isUsed) {
-      if (this.game.isRecovery == false && this.game.isPackingCar == false) {
-        //if (!this.game.isPackingCar) {
-        if (this.position.y < this.game.gameHeight - 300) {
-          if (
-            this.game.player.moves.has("UP") ||
-            this.game.player.speed >= this.game.player.maxSpeed / 1.5
-          ) {
-            this.speed -= 0.15;
-          } else if (
-            this.game.player.moves.has("DOWN") ||
-            this.game.player.speed <= this.game.player.maxSpeed / 2
-          ) {
-            this.speed += 0.25;
+    if (!this.isDeath) {
+      if (!this.isUsed) {
+        if (this.game.isRecovery == false && this.game.isPackingCar == false) {
+          //if (!this.game.isPackingCar) {
+          if (this.position.y < this.game.gameHeight - 300) {
+            if (
+              this.game.player.moves.has("UP") ||
+              this.game.player.speed >= this.game.player.maxSpeed / 1.5
+            ) {
+              this.speed -= 0.15;
+            } else if (
+              this.game.player.moves.has("DOWN") ||
+              this.game.player.speed <= this.game.player.maxSpeed / 2
+            ) {
+              this.speed += 0.25;
+            }
+          } else {
+            if (this.game.player.speed >= this.game.player.maxSpeed) {
+              this.speed -= 0.2;
+            } else {
+              this.speed += 0.4;
+            }
+          }
+          this.position.y -= this.speed / 2;
+
+          if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
+
+          if (this.isWaitingForPlayer) {
+            if (
+              this.game.player.position.x + this.game.player.size.x / 2 >
+                this.position.x -
+                  this.game.collision.collisionDifferenceLimit * 3 &&
+              this.game.player.position.x + this.game.player.size.x / 2 <
+                this.position.x +
+                  this.size.x +
+                  this.game.collision.collisionDifferenceLimit * 3 &&
+              this.position.y + this.size.y - this.game.player.position.y > 0 &&
+              this.position.y + this.size.y - this.game.player.position.y <
+                this.game.collision.collisionDifferenceLimit * 100
+            ) {
+              this.game.player.isActive = false;
+              this.game.isRecovery = true;
+              this.game.isPackingCar = true;
+            }
           }
         } else {
-          if (this.game.player.speed >= this.game.player.maxSpeed) {
-            this.speed -= 0.2;
-          } else {
-            this.speed += 0.4;
+          if (!this.game.isPackingCar) this.recoveryMode();
+          else {
+            this.game.player.position.x -=
+              this.game.collision.checkIsColorCollison(
+                this.collisionPoints,
+                this.game.context
+              );
+            if (
+              this.game.player.position.y >
+              this.position.y + this.size.y / 2
+            ) {
+              if (!this.afterCar) {
+                this.game.player.position.y--;
+              }
+
+              this.game.player.position.x +=
+                this.position.x +
+                this.game.player.size.x / 2 -
+                this.game.player.position.x;
+            } else {
+              this.game.player.speed = 0;
+              this.game.isRecovery = true;
+              this.setTruckOnARoadSide();
+            }
           }
-        }
-        this.position.y -= this.speed / 2;
-
-        if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
-
-        if (this.isWaitingForPlayer) {
           if (
-            this.game.player.position.x + this.game.player.size.x / 2 >
-              this.position.x -
-                this.game.collision.collisionDifferenceLimit * 3 &&
-            this.game.player.position.x + this.game.player.size.x / 2 <
-              this.position.x +
-                this.size.x +
-                this.game.collision.collisionDifferenceLimit * 3 &&
-            this.position.y + this.size.y - this.game.player.position.y > 0 &&
-            this.position.y + this.size.y - this.game.player.position.y <
-              this.game.collision.collisionDifferenceLimit * 100
+            this.position.y + this.size.y * 1.5 > this.game.player.position.y &&
+            this.afterCar &&
+            this.game.isPackingCar
           ) {
-            this.game.player.isActive = false;
-            this.game.isRecovery = true;
-            this.game.isPackingCar = true;
+            this.game.player.position.y++; //wyjazd autka // ewentualne zycia albo achivmenty
+            this.game.startDrive();
+            this.game.getGift(this.commodity!);
+            setTimeout(() => {
+              this.resetSetOfTruck();
+            }, 2000);
           }
         }
       } else {
-        if (!this.game.isPackingCar) this.recoveryMode();
-        else {
-          this.game.player.position.x -=
-            this.game.collision.checkIsColorCollison(
-              this.collisionPoints,
-              this.game.context
-            );
-          if (this.game.player.position.y > this.position.y + this.size.y / 2) {
-            if (!this.afterCar) {
-              this.game.player.position.y--;
-            }
-
-            this.game.player.position.x +=
-              this.position.x +
-              this.game.player.size.x / 2 -
-              this.game.player.position.x;
-          } else {
-            this.game.player.speed = 0;
-            this.game.isRecovery = true;
-            this.setTruckOnARoadSide();
-          }
-        }
-        if (
-          this.position.y + this.size.y * 1.5 > this.game.player.position.y &&
-          this.afterCar &&
-          this.game.isPackingCar
-        ) {
-          this.game.player.position.y++; //wyjazd autka // ewentualne zycia albo achivmenty
-          this.game.startDrive();
-          this.game.getGift(this.commodity!);
-          setTimeout(() => {
-            this.resetSetOfTruck();
-          }, 2000);
-        }
+        this.position.y -= Math.abs(this.speed);
       }
-    } else {
-      this.position.y -= Math.abs(this.speed);
+      this.position.x -= this.game.collision.checkIsColorCollison(
+        this.collisionPoints,
+        this.game.context
+      );
     }
-    this.position.x -= this.game.collision.checkIsColorCollison(
-      this.collisionPoints,
-      this.game.context
-    );
   };
 
   setTruckOnARoadSide = () => {
@@ -243,10 +247,16 @@ export default class Truck extends Vehicle {
 
     this.refreshPosition();
 
-    if (this.game.gameFrame % this.game.staggerFrames == 0) {
+    if (this.game.gameFrame % this.game.staggerFrames == 0 && !this.isDeath) {
       if (this.frameX < 1)
         this.frameX++; // to 1 because we have 2 images to display
       else this.frameX = 0;
+    } else {
+      if (this.game.gameFrame % this.game.staggerFrames == 0 && this.isDeath) {
+        if (this.frameX < fires.find((el) => el.id == 1)!.amountOfGraphic - 1)
+          this.frameX++; // to 1 because we have 2 images to display
+        else this.deleteFromScreen();
+      }
     }
     //console.log(this.frameX);
 

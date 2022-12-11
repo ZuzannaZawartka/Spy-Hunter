@@ -1,8 +1,7 @@
-import { vehicles } from "./config";
+import { fires, vehicles } from "./config";
 import Game from "./Game";
 import { coords, gameObjects } from "./interfaces";
 import Obstacle from "./Obstacle";
-import Player from "./Player";
 
 export default class Vehicle {
   size: coords;
@@ -29,6 +28,8 @@ export default class Vehicle {
   lastTouch: undefined | string;
   timeToRemberLastTouch: number;
   currentTime: number;
+  isDeath: boolean;
+  frameX: number;
 
   constructor(width: number, height: number, game: Game) {
     (this.size = { x: width, y: height }), (this.game = game);
@@ -51,6 +52,8 @@ export default class Vehicle {
     this.lastTouch = undefined;
     this.timeToRemberLastTouch = 70;
     this.currentTime = 0;
+    this.isDeath = false;
+    this.frameX = 0;
   }
 
   createPlayer = () => {
@@ -76,15 +79,29 @@ export default class Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
     this.isActive = false;
-    this.game.vehicles.vehicles = this.game.vehicles.vehicles.filter(
-      (vehicle) => vehicle != this
-    );
+    // this.game.vehicles.vehicles = this.game.vehicles.vehicles.filter(
+    //   (vehicle) => vehicle != this
+    // );
 
     if (this.lastTouch != undefined) {
       this.game.player.killedCivile();
     }
 
-    //this.game.isGameplay = false;
+    this.setFire();
+  };
+
+  deleteFromScreen = () => {
+    this.game.vehicles.vehicles = this.game.vehicles.vehicles.filter(
+      (vehicle) => vehicle != this
+    );
+  };
+
+  setFire = () => {
+    let fire = fires.find((elem) => elem.id == 1)!;
+    this.img!.src = fire.imgSrc;
+    this.size.x = fire.width;
+    this.size.y = fire.height;
+    this.isDeath = true;
   };
 
   checkTypeOfGroundUnderPlayer = () => {
@@ -106,14 +123,11 @@ export default class Vehicle {
   setLastTouchAsAPlayer = () => {
     this.currentTime = this.game.gameFrame;
     this.lastTouch = "player";
-    console.log("WALNIETO");
   };
 
   checkTimeForLastTouch = () => {
-    console.log(this.game.gameFrame - this.currentTime);
     if (this.game.gameFrame - this.currentTime >= this.timeToRemberLastTouch) {
       this.lastTouch = undefined;
-      console.log("PRZEDAWNIENIE");
     }
   };
 
@@ -133,31 +147,33 @@ export default class Vehicle {
   };
 
   refreshPosition = () => {
-    if (this.position.y < this.game.gameHeight - 300) {
-      if (
-        this.game.player.moves.has("UP") ||
-        this.game.player.speed >= this.game.player.maxSpeed
-      ) {
-        this.speed -= 0.25;
-      } else if (
-        this.game.player.moves.has("DOWN") ||
-        this.game.player.speed <= this.game.player.maxSpeed / 4
-      ) {
-        this.speed += 0.25;
-      }
-    } else {
-      if (this.game.player.speed >= this.game.player.maxSpeed) {
-        this.speed -= 0.2;
+    if (!this.isDeath) {
+      if (this.position.y < this.game.gameHeight - 300) {
+        if (
+          this.game.player.moves.has("UP") ||
+          this.game.player.speed >= this.game.player.maxSpeed
+        ) {
+          this.speed -= 0.25;
+        } else if (
+          this.game.player.moves.has("DOWN") ||
+          this.game.player.speed <= this.game.player.maxSpeed / 4
+        ) {
+          this.speed += 0.25;
+        }
       } else {
-        this.speed += 0.4;
+        if (this.game.player.speed >= this.game.player.maxSpeed) {
+          this.speed -= 0.2;
+        } else {
+          this.speed += 0.4;
+        }
       }
+      this.position.y -= this.speed / 2;
+      this.position.x -= this.game.collision.checkIsColorCollison(
+        this.collisionPoints,
+        this.game.context
+      );
+      if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
     }
-    this.position.y -= this.speed / 2;
-    this.position.x -= this.game.collision.checkIsColorCollison(
-      this.collisionPoints,
-      this.game.context
-    );
-    if (this.speed >= this.maxSpeed) this.speed = this.maxSpeed;
   };
 
   moveAfterHit = (
@@ -176,9 +192,9 @@ export default class Vehicle {
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
+      } else {
+        vehicle.setLastTouchAsAPlayer();
       }
-
-      vehicle.setLastTouchAsAPlayer();
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
       if (opponent.isEnemy && opponent.isAttacking) {
@@ -187,8 +203,9 @@ export default class Vehicle {
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
+      } else {
+        vehicle.setLastTouchAsAPlayer();
       }
-      vehicle.setLastTouchAsAPlayer();
     } else {
       opponent.position.x += direction.x / 2;
       vehicle.position.x -= direction.x / 2;
@@ -196,21 +213,33 @@ export default class Vehicle {
   };
 
   draw = (context: CanvasRenderingContext2D) => {
-    this.collisionPoints = this.game.collision.checkCollision(
-      this,
-      this.collisionPoints,
-      context,
-      this.position,
-      this.size,
-      this.collisionDifferenceLimit //      this.collisionDifferenceLimit
-    );
+    if (!this.isDeath) {
+      this.collisionPoints = this.game.collision.checkCollision(
+        this,
+        this.collisionPoints,
+        context,
+        this.position,
+        this.size,
+        this.collisionDifferenceLimit //      this.collisionDifferenceLimit
+      );
+    }
 
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
 
     this.refreshPosition();
 
+    if (this.game.gameFrame % this.game.staggerFrames == 0 && this.isDeath) {
+      if (this.frameX < fires.find((el) => el.id == 1)!.amountOfGraphic - 1)
+        this.frameX++; // to 1 because we have 2 images to display
+      else this.deleteFromScreen();
+    }
+
     context.drawImage(
       this.img!,
+      this.frameX * this.size.x,
+      0,
+      this.size.x,
+      this.size.y,
       this.position.x,
       this.position.y,
       this.size.x,

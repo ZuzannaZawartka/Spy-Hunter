@@ -58,7 +58,7 @@ export default class Player extends Vehicle {
   death = () => {
     //animacje dorobimy ze tak buch robi
     this.resetLife();
-
+    this.life--;
     this.isActive = false;
     this.isAlive = false;
     this.speed = 0;
@@ -108,28 +108,6 @@ export default class Player extends Vehicle {
   removeMove(action: string) {
     this.moves.delete(action);
   }
-
-  draw = (context: CanvasRenderingContext2D) => {
-    if (this.beforeMove == false || this.game.isRecovery == false)
-      this.collisionPoints = this.game.collision.checkCollision(
-        this,
-        this.collisionPoints,
-        context,
-        this.position,
-        this.size,
-        this.collisionDifferenceLimit
-      );
-
-    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
-
-    context.drawImage(
-      document.getElementById("playerImage") as CanvasImageSource,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
-    );
-  };
 
   update = () => {
     if (this.beforeMove && this.moves.size > 0) this.beforeMove = false;
@@ -197,5 +175,27 @@ export default class Player extends Vehicle {
     } else {
       this.game.startDrive();
     }
+  };
+
+  draw = (context: CanvasRenderingContext2D) => {
+    if (this.beforeMove == false || this.game.isRecovery == false)
+      this.collisionPoints = this.game.collision.checkCollision(
+        this,
+        this.collisionPoints,
+        context,
+        this.position,
+        this.size,
+        this.collisionDifferenceLimit
+      );
+
+    this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
+
+    context.drawImage(
+      document.getElementById("playerImage") as CanvasImageSource,
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y
+    );
   };
 }
