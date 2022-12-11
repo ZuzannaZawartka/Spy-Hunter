@@ -7,6 +7,8 @@ import Player from "./Player";
 import BulletController from "./BulletController";
 import Vehicles from "./Vehicles";
 import Guns from "./Guns";
+import SoundManager from "./SoundManager";
+import { audio } from "./config";
 
 export default class Game {
   public canvas: HTMLCanvasElement | null;
@@ -18,17 +20,17 @@ export default class Game {
   public maxPlayerArea: number;
   public minPlayerArea: number;
 
-  public isGameplay: boolean; //czy byl death czy nie jesli tak to zatrzymanie
-  public isPause: boolean; //pauza
-  public isRecovery: boolean;
-  public points: number;
-  public level: number;
-  public distance: number;
-  public pointsForGround: number;
-  public pointsForWater: number;
-  public timeNoDeath: number;
-  private timer: undefined | number;
-  public gameFrame: number;
+  public isGameplay: boolean = false; //czy byl death czy nie jesli tak to zatrzymanie
+  public isPause: boolean = false; //pauza
+  public isRecovery: boolean = false;
+  public points: number = 0;
+  public level: number = 0;
+  public distance: number = 0;
+  public pointsForGround: number = 15;
+  public pointsForWater: number = 25;
+  public timeNoDeath: number = 1000;
+  private timer: undefined | number = undefined;
+  public gameFrame: number = 0;
 
   public background: Background;
   public player: Player;
@@ -39,11 +41,12 @@ export default class Game {
   public gui: Gui;
   public vehicles: Vehicles;
   public bulletController: BulletController;
-  public animation: number | undefined;
-  public isBlockedCountingPoints: boolean;
-  public recoverySpeed: number;
-  public staggerFrames: number;
-  isPackingCar: boolean;
+  public animation: number | undefined = undefined;
+  public isBlockedCountingPoints: boolean = false;
+  public recoverySpeed: number = 3;
+  public staggerFrames: number = 20;
+  public isPackingCar: boolean = false;
+  public sound: SoundManager;
 
   constructor(
     gameWidth: number,
@@ -61,22 +64,6 @@ export default class Game {
     this.playerWidth = playerWidth;
     this.maxPlayerArea = this.gameHeight / 2 - this.playerHeight;
     this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
-    this.pointsForGround = 15;
-    this.pointsForWater = 25;
-    this.recoverySpeed = 3;
-    this.points = 0;
-    this.distance = 0;
-    this.level = 0;
-    this.isPause = false;
-    this.isBlockedCountingPoints = false;
-    this.isPackingCar = false; // animation of Truck
-    this.isGameplay = false;
-    this.isRecovery = false; // truck drive with car
-    this.animation = undefined;
-    this.timeNoDeath = 1000;
-    this.timer = undefined;
-    this.gameFrame = 0;
-    this.staggerFrames = 20;
 
     this.background = new Background(this);
     this.player = new Player(40, 80, this);
@@ -84,6 +71,9 @@ export default class Game {
     this.collision = new Collision(this);
     this.gui = new Gui(this);
     this.guns = new Guns(this);
+    this.sound = new SoundManager(
+      audio.find((audio) => audio.type == "soundtrack")!.imgSrc
+    );
 
     this.bulletController = new BulletController(this);
     this.obstacles = new Obstacles(this);
@@ -95,6 +85,7 @@ export default class Game {
   init = () => {
     document.getElementById("container")!.style.width = this.gameWidth + "px";
     document.getElementById("container")!.style.height = this.gameHeight + "px";
+
     this.player.reset();
     this.obstacles.reset();
     this.vehicles.reset();
@@ -106,8 +97,6 @@ export default class Game {
 
     this.timer = undefined;
     this.background?.init();
-
-    this.vehicles.createCivilian();
   };
 
   start = () => {
@@ -121,17 +110,18 @@ export default class Game {
   restartGame = () => {
     this.isGameplay = false;
     this.isRecovery = true;
+    this.isPackingCar = false;
+    this.player.isDeath = false;
     this.vehicles.truckRecovery();
-    this.player.position.y = 900;
-    console.log(this.vehicles.vehicles);
   };
 
   startDrive = () => {
+    this.sound.restartMusic("soundtrack");
     this.isGameplay = true;
     this.isRecovery = false;
     //this.isPackingCar = false;
     this.player.isActive = true;
-    this.player.isAlive = true;
+    this.player.isDeath = false;
     this.noDeathTimer();
   };
 
@@ -141,9 +131,10 @@ export default class Game {
   };
 
   stop = () => {
-    this.isGameplay = false;
+    this.sound.stopMusic("soundtrack");
     this.isGameplay = false;
     this.gui.showMenu();
+    this.player.previousImage();
     clearInterval(this.timer);
     this.init();
   };
@@ -152,9 +143,11 @@ export default class Game {
     this.isPause = !this.isPause;
     if (!this.isPause) {
       this.animate();
+      this.sound.restartMusic("soundtrack");
       if (this.timeNoDeath > 0) this.noDeathTimer();
     } else {
       cancelAnimationFrame(this.animation!);
+      this.sound.stopMusic("soundtrack");
       if (this.timeNoDeath > 0) clearInterval(this.timer);
     }
   };
@@ -190,17 +183,27 @@ export default class Game {
         this.obstacles.generatePuddle();
       }
 
-      if ((this.points % 100) * this.points == 0) {
+      if ((this.points % 300) * this.points == 0) {
         this.obstacles.generatePuddle();
-        this.vehicles.createSpinningEnemy();
-        // this.vehicles.createCivilian();
+      }
+
+      if ((this.points % 100) * this.points == 0) {
+        // this.obstacles.generatePuddle();
+        // this.vehicles.createSpinningEnemy();
         this.vehicles.createCivilian();
+        // this.vehicles.createCivilian();
         // this.vehicles.createHelicopter();
-        this.vehicles.createTruckWithLadder();
+        // this.vehicles.createTruckWithLadder();
+      }
+      if ((this.points % 600) * this.points == 0) {
+        //this.vehicles.createCivilian();
+        // this.vehicles.createHelicopter();
+        this.vehicles.createSpinningEnemy();
+        //this.vehicles.createTruckWithLadder();
       }
 
       if ((this.points % 1000) * this.points == 0) {
-        this.vehicles.createCivilian();
+        //this.vehicles.createCivilian();
         // this.vehicles.createHelicopter();
         this.vehicles.createHelicopter();
         //this.vehicles.createTruckWithLadder();

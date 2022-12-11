@@ -11,6 +11,7 @@ export default class SpinningEnemy extends Vehicle {
   timeToDrive: number;
   isAttacking: boolean;
   isWating: boolean;
+  pointsForEnemy: number = 500;
   constructor(game: Game) {
     super(40, 80, game);
     this.frameX = 0;
@@ -56,7 +57,6 @@ export default class SpinningEnemy extends Vehicle {
       this.currentTime = this.game.gameFrame;
     }
 
-    console.log(this.game.gameFrame - this.currentTime);
     if (this.game.gameFrame - this.currentTime >= this.timeToDrive) {
       this.isDriveAway = true;
       this.frameX = 0;
@@ -160,9 +160,6 @@ export default class SpinningEnemy extends Vehicle {
           this.game.player.size.x / 2 -
           (this.position.x + this.size.x / 2)
       );
-
-      console.log("JESTESMY NIE DALECKO");
-      console.log(sign * 4);
 
       this.position.x += sign * 6;
 

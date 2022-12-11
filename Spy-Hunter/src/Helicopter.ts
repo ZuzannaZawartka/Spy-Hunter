@@ -26,7 +26,7 @@ export default class Helicopter extends Vehicle {
     this.isFliesAway = false;
 
     this.currentTimeBomb = 0;
-    this.timeToBomb = 100;
+    this.timeToBomb = 200;
     this.isStartedCountingTimeToSetBomb = false;
 
     this.create();
@@ -134,6 +134,7 @@ export default class Helicopter extends Vehicle {
     if (this.game.gameFrame % this.game.staggerFrames == 0) {
       if (this.frameX < 3) this.frameX++;
       else this.frameX = 0;
+      this.game.sound.helicopter();
     }
 
     context.drawImage(

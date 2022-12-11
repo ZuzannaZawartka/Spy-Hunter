@@ -123,6 +123,10 @@ export default class Background {
       this.game.level = this.background!.directionRight;
     }
     this.refreshBackgroundData();
+
+    setTimeout(() => {
+      this.game.vehicles.createTruckWithLadder();
+    }, 3000);
     //this.setNewBackground();
   };
 

@@ -84,10 +84,10 @@ export default class Vehicle {
     // );
 
     if (this.lastTouch != undefined) {
-      this.game.player.killedCivile();
+      if (this.isCivilian && !this.isEnemy) this.game.player.killedCivile();
     }
 
-    this.setFire();
+    this.setFire(1);
   };
 
   deleteFromScreen = () => {
@@ -96,8 +96,8 @@ export default class Vehicle {
     );
   };
 
-  setFire = () => {
-    let fire = fires.find((elem) => elem.id == 1)!;
+  setFire = (number: number) => {
+    let fire = fires.find((elem) => elem.id == number)!;
     this.img!.src = fire.imgSrc;
     this.size.x = fire.width;
     this.size.y = fire.height;
@@ -192,9 +192,10 @@ export default class Vehicle {
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
-      } else {
-        vehicle.setLastTouchAsAPlayer();
       }
+      vehicle.setLastTouchAsAPlayer();
+
+      if (!vehicle.isEnemy) this.game.sound.collision();
     } else if (!vehicle.isCivilian && opponent.isCivilian) {
       opponent.position.x += direction.x;
       if (opponent.isEnemy && opponent.isAttacking) {
@@ -203,9 +204,10 @@ export default class Vehicle {
         if (this.game.player.enemyLives <= 0) {
           this.game.player.death();
         }
-      } else {
-        vehicle.setLastTouchAsAPlayer();
       }
+      vehicle.setLastTouchAsAPlayer();
+
+      if (!vehicle.isEnemy) this.game.sound.collision();
     } else {
       opponent.position.x += direction.x / 2;
       vehicle.position.x -= direction.x / 2;

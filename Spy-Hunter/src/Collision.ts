@@ -102,6 +102,7 @@ export default class Collision {
     this.checkBulletCollision(vehicle);
     if (!this.game.isPackingCar) this.checkVehiclesCollision(vehicle);
 
+    console.log(this.game.isPackingCar + "pakownanko");
     return collisionPoints;
   };
 
@@ -146,8 +147,8 @@ export default class Collision {
           vehicle.death();
         } else if (!element.used) {
           vehicle.skid(element);
+          if (!vehicle.isCivilian && !vehicle.isEnemy) this.game.sound.skid(); //for player sound
         }
-        //Jakis dzialanie na obstacle
       }
     });
   };
@@ -227,9 +228,7 @@ export default class Collision {
             }
           }
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     });
 
     return move;

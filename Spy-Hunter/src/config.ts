@@ -189,6 +189,44 @@ const helicopter = [
   },
 ];
 
+const audio = [
+  {
+    id: 0,
+    type: "soundtrack",
+    imgSrc: "./graphics/music/soundtrack.mp3",
+  },
+  {
+    id: 1,
+    type: "shoot",
+    imgSrc: "./graphics/music/shoot.mp3",
+  },
+  {
+    id: 2,
+    type: "helicopter",
+    imgSrc: "./graphics/music/helicopter.mp3",
+  },
+  {
+    id: 3,
+    type: "death",
+    imgSrc: "./graphics/music/death2.mp3",
+  },
+  {
+    id: 4,
+    type: "skid",
+    imgSrc: "./graphics/music/skid.mp3",
+  },
+  {
+    id: 5,
+    type: "collision",
+    imgSrc: "./graphics/music/collision.mp3",
+  },
+  {
+    id: 6,
+    type: "vibrations",
+    imgSrc: "./graphics/music/vibrations.mp3",
+  },
+];
+
 const enemies = [
   {
     id: 0,
@@ -198,6 +236,18 @@ const enemies = [
     width: 70,
     height: 98,
     maxSpeed: 15,
+    isCivilian: true,
+    isEnemy: true,
+    collision: true,
+  },
+  {
+    id: 1,
+    type: "car",
+    imgSrc: "./graphics/car3.png",
+    afterCollisionImgSrc: "none",
+    width: 40,
+    height: 75,
+    maxSpeed: 25,
     isCivilian: true,
     isEnemy: true,
     collision: true,
@@ -215,4 +265,5 @@ export {
   helicopter,
   enemies,
   fires,
+  audio,
 };

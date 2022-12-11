@@ -1,3 +1,4 @@
+import { enemies, fires } from "./config";
 import Game from "./Game";
 import Vehicle from "./Vehicle";
 
@@ -13,13 +14,15 @@ export default class Player extends Vehicle {
   moves: Set<String>;
   collisionDifferenceLimit: number;
   beforeMove: boolean;
-  isAlive: boolean;
+  isDeath: boolean;
   life: number;
   enemyLives: number;
+  afterFire: boolean = false;
 
   constructor(width: number, height: number, game: Game) {
     super(width, height, game);
 
+    this.img = document.getElementById("playerImage") as CanvasImageSource;
     this.moves = new Set();
     this.speed = 5;
     this.maxSpeed = 25;
@@ -32,7 +35,7 @@ export default class Player extends Vehicle {
     this.collisionDifferenceLimit = 5;
     this.isCivilian = false;
     this.beforeMove = true; // czy wykonał pierwszy ruch
-    this.isAlive = true; // czy umarł
+    this.isDeath = false; // czy umarł
     this.life = 1; // number of live
     this.enemyLives = 30; // attack times
     this.isEnemy = false;
@@ -55,20 +58,29 @@ export default class Player extends Vehicle {
     player!.style.height = this.size.y + "px";
   };
 
+  previousImage = () => {
+    let player = enemies.find((el) => el.id == 1)!;
+    this.frameX = 0;
+    this.img!.src = player!.imgSrc;
+    this.size.x = player.width;
+    this.size.y = player.height;
+    this.isDeath = false;
+    this.afterFire = false;
+  };
+
   death = () => {
     //animacje dorobimy ze tak buch robi
-    this.resetLife();
+
+    if (this.isActive) this.game.sound.death();
+    this.game.sound.stopMusic("soundtrack");
     this.life--;
     this.isActive = false;
-    this.isAlive = false;
+    this.isDeath = true;
     this.speed = 0;
-    if (this.game.timeNoDeath > 0) {
-      this.game.restartGame();
-      // this.game.restartGame();
-    } else {
-      if (this.life > 0) {
-        this.game.restartGame();
-      } else {
+    this.setFire(0);
+    this.resetLife();
+    if (this.game.timeNoDeath <= 0) {
+      if (this.life <= 0) {
         this.game.stop();
       }
     }
@@ -178,20 +190,36 @@ export default class Player extends Vehicle {
   };
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (this.beforeMove == false || this.game.isRecovery == false)
-      this.collisionPoints = this.game.collision.checkCollision(
-        this,
-        this.collisionPoints,
-        context,
-        this.position,
-        this.size,
-        this.collisionDifferenceLimit
-      );
-
+    if (!this.beforeMove || !this.game.isRecovery) {
+      if (!this.isDeath)
+        this.collisionPoints = this.game.collision.checkCollision(
+          this,
+          this.collisionPoints,
+          context,
+          this.position,
+          this.size,
+          this.collisionDifferenceLimit
+        );
+    }
     this.vehicleHitAction = this.game.collision.refreshBounceAction(this);
 
+    if (this.game.gameFrame % this.game.staggerFrames == 0 && this.isDeath) {
+      if (
+        this.frameX < fires.find((el) => el.id == 0)!.amountOfGraphic - 1 &&
+        !this.afterFire
+      )
+        this.frameX++; // to 1 because we have 2 images to display
+      else {
+        this.afterFire = true;
+      }
+    }
+
     context.drawImage(
-      document.getElementById("playerImage") as CanvasImageSource,
+      this.img!,
+      this.frameX * this.size.x,
+      0,
+      this.size.x,
+      this.size.y,
       this.position.x,
       this.position.y,
       this.size.x,

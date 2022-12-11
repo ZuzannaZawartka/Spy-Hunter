@@ -40,7 +40,6 @@ export default class Gui {
   };
 
   showMenu = () => {
-    console.log("SHOW MENU");
     document.getElementById("menu")!.style.display = "block";
     document.getElementById("menu")!.style.zIndex = "5";
   };

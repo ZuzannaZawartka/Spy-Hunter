@@ -34,6 +34,7 @@ export default class Vehicles {
   truckRecovery = () => {
     if (this.getVehicle("truck") != undefined) this.getVehicle("truck");
     this.deleteSpecificTypeOfObject("truck");
+    this.game.player.previousImage();
     this.vehicles.push(new Truck(this.game, 0));
   };
 
@@ -83,7 +84,5 @@ export default class Vehicles {
       //to generate helicopter last
       this.getVehicle("helicopter")?.draw(context);
     }
-
-    console.log(this.vehicles);
   };
 }

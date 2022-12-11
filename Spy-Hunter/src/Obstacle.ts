@@ -51,6 +51,16 @@ export default class Obstacle {
   };
 
   update = () => {
-    this.position.y += this.game.player.speed;
+    if (
+      !this.game.player.isActive &&
+      this.game.isGameplay &&
+      !this.game.isPackingCar
+    ) {
+      if (this.game.player.position.y < this.game.gameHeight) {
+        this.position.y += this.game.recoverySpeed;
+      }
+    } else {
+      this.position.y += this.game.player.speed;
+    }
   };
 }

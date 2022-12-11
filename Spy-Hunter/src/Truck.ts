@@ -27,7 +27,6 @@ export default class Truck extends Vehicle {
   generateCommodity = (number: number) => {
     if (number == 1) {
       this.commodity = guns.find((el) => el.id == 1)!.type;
-      console.log(this.commodity);
     } else if (number == 2) {
       this.commodity = "life";
     }
@@ -233,7 +232,11 @@ export default class Truck extends Vehicle {
   };
 
   draw = (context: CanvasRenderingContext2D) => {
-    if (this.game.player.isAlive && !this.game.player.beforeMove)
+    if (
+      !this.game.player.isDeath &&
+      !this.game.player.beforeMove &&
+      !this.game.isPackingCar
+    )
       this.collisionPoints = this.game.collision.checkCollision(
         this,
         this.collisionPoints,
@@ -258,7 +261,6 @@ export default class Truck extends Vehicle {
         else this.deleteFromScreen();
       }
     }
-    //console.log(this.frameX);
 
     context.drawImage(
       this.img!,
