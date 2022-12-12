@@ -16,4 +16,17 @@ interface coords {
   y: number;
 }
 
-export type { size, coords, color };
+interface gameObjects {
+  id: number;
+  type: string;
+  imgSrc: string;
+  afterCollisionImgSrc: string;
+  width: number;
+  height: number;
+  maxSpeed: number;
+  isCivilian: boolean;
+  collision: boolean;
+  isEnemy: boolean;
+}
+
+export type { size, coords, color, gameObjects };

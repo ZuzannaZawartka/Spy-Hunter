@@ -1,6 +1,7 @@
 import Game from "./Game";
 import Obstacle from "./Obstacle";
 import { obstacles } from "./config";
+import { coords } from "./interfaces";
 
 export default class Obstacles {
   game: Game;
@@ -22,12 +23,12 @@ export default class Obstacles {
     let roadsPoints = this.game.background.getRoadStartEndPoints(this.position);
     let paddle = obstacles.find((obstacle) => obstacle.type == "paddle");
 
-    console.log("Generowanie");
     //generate Sign of paddle
     if (roadsPoints && paddle) {
       this.obstacles.push(
         new Obstacle(
           this.game,
+          paddle.type,
           {
             x: Math.floor(
               Math.random() *
@@ -44,7 +45,26 @@ export default class Obstacles {
           paddle.afterCollisionImgSrc
         )
       );
-      console.log(this.obstacles);
+    }
+  };
+
+  generateGranade = (position: coords) => {
+    let granade = obstacles.find((obstacle) => obstacle.type == "granade");
+
+    if (granade) {
+      this.obstacles.push(
+        new Obstacle(
+          this.game,
+          granade.type,
+          {
+            x: position.x,
+            y: position.y,
+          },
+          { x: granade.width, y: granade.height },
+          granade.imgSrc,
+          granade.afterCollisionImgSrc
+        )
+      );
     }
   };
 
