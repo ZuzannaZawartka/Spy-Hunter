@@ -56,7 +56,6 @@ export default class Helicopter extends Vehicle {
 
     if (this.game.gameFrame - this.currentTime >= this.time) {
       this.isFliesAway = true;
-      console.log("ODLOT");
       // set img without bomb
     }
 
@@ -64,7 +63,6 @@ export default class Helicopter extends Vehicle {
       let randomx =
         Math.random() * (this.rangeOfBomb + this.rangeOfBomb) -
         this.rangeOfBomb;
-      console.log(randomx + "liczba");
       if (!this.game.player.isDeath)
         this.game.obstacles.generateGranade({
           x: this.position.x + randomx,

@@ -61,5 +61,8 @@ export default class Gui {
   showMenu = () => {
     document.getElementById("menu")!.style.display = "block";
     document.getElementById("menu")!.style.zIndex = "5";
+    document.getElementById(
+      "highest-score"
+    )!.innerHTML = `<h1>${this.game.highestScore}</h1>`;
   };
 }

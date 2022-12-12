@@ -28,7 +28,8 @@ export default class Game {
   public distance: number = 0;
   public pointsForGround: number = 15;
   public pointsForWater: number = 25;
-  public timeNoDeath: number = 1000;
+  public timeNoDeath: number = 100;
+  public highestScore: number = 0;
   private timer: undefined | number = undefined;
   public gameFrame: number = 0;
 
@@ -96,7 +97,7 @@ export default class Game {
 
     this.level = 0;
     this.isPause = false;
-    this.timeNoDeath = 1000;
+    this.timeNoDeath = 100;
     this.timer = undefined;
     this.background?.init();
     this.gui.refreshGui();
@@ -137,6 +138,7 @@ export default class Game {
     clearInterval(this.timer);
     this.sound.stopMusic("soundtrack");
     this.isGameplay = false;
+    this.highestScore = this.points;
     this.gui.showMenu();
     this.player.previousImage();
     this.init();
@@ -234,8 +236,6 @@ export default class Game {
   };
 
   animate = () => {
-    console.log(this.timer + "TIME");
-
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();

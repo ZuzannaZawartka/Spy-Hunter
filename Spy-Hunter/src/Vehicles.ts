@@ -54,7 +54,6 @@ export default class Vehicles {
   createTruckWithLadder = () => {
     if (this.getVehicle("truck") == undefined) {
       let rNumber = Math.floor(Math.random() * (trucks.length - 1) + 1);
-      console.log(rNumber + "number trucka");
       let truck = new Truck(this.game, rNumber);
       truck.isWaitingForPlayer = true;
       truck.createOnTop();

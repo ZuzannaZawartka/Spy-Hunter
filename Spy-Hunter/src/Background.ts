@@ -85,7 +85,6 @@ export default class Background {
         pointsArray = [];
       }
     }
-    //console.log(startPoint, endPoint);
     return { startPoint, endPoint };
   };
 
