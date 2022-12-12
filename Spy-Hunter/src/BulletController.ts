@@ -8,12 +8,16 @@ export default class BulletController {
   game: Game;
   bulletSize: coords;
   bulletDelay: number;
+  soundBulletDelay: number;
+  timeTillNextBulletSound: number;
 
   constructor(game: Game) {
     this.game = game;
     this.bullets = [];
     this.bulletDelay = 6;
     this.timeTillNextBullet = 0;
+    this.timeTillNextBulletSound = 0;
+    this.soundBulletDelay = 10;
     this.bulletSize = { x: 5, y: 30 };
   }
 
@@ -27,7 +31,13 @@ export default class BulletController {
       this.timeTillNextBullet = this.bulletDelay;
     }
 
+    if (this.timeTillNextBulletSound <= 0) {
+      this.timeTillNextBulletSound = this.soundBulletDelay;
+      this.game.sound.shoot();
+    }
+
     this.timeTillNextBullet--;
+    this.timeTillNextBulletSound--;
   }
 
   draw(context: CanvasRenderingContext2D) {

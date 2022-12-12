@@ -7,6 +7,7 @@ export default class Background {
   position: coords;
   image: CanvasImageSource;
   scale: number;
+  slideAnimation: boolean;
   background:
     | {
         level: number;
@@ -25,6 +26,7 @@ export default class Background {
     this.background = undefined;
     this.position = { x: 0, y: 0 };
     this.scale = 0;
+    this.slideAnimation = false;
 
     this.image = document.getElementById(
       "backgroundImage"
@@ -121,6 +123,10 @@ export default class Background {
       this.game.level = this.background!.directionRight;
     }
     this.refreshBackgroundData();
+
+    setTimeout(() => {
+      this.game.vehicles.createTruckWithLadder();
+    }, 3000);
     //this.setNewBackground();
   };
 
@@ -128,6 +134,18 @@ export default class Background {
     this.position.y += this.game.player.speed;
     if (this.position.y >= 0) {
       this.checkDirection();
+    }
+
+    if (
+      !this.game.player.isActive &&
+      this.game.isGameplay &&
+      !this.game.isPackingCar
+    ) {
+      if (this.game.player.position.y < this.game.gameHeight) {
+        this.position.y += this.game.recoverySpeed;
+      } else {
+        this.game.restartGame();
+      }
     }
   };
 }

@@ -6,6 +6,9 @@ import Obstacles from "./Obstacles";
 import Player from "./Player";
 import BulletController from "./BulletController";
 import Vehicles from "./Vehicles";
+import Guns from "./Guns";
+import SoundManager from "./SoundManager";
+import { audio } from "./config";
 
 export default class Game {
   public canvas: HTMLCanvasElement | null;
@@ -17,25 +20,34 @@ export default class Game {
   public maxPlayerArea: number;
   public minPlayerArea: number;
 
-  public isGameplay: boolean; //czy byl death czy nie jesli tak to zatrzymanie
-  public isPause: boolean; //pauza
-  public points: number;
-  public level: number;
-  public distance: number;
-  public pointsForGround: number;
-  public pointsForWater: number;
-  public timeNoDeath: number;
-  private timer: undefined | number;
+  public isGameplay: boolean = false; //czy byl death czy nie jesli tak to zatrzymanie
+  public isPause: boolean = false; //pauza
+  public isRecovery: boolean = false;
+  public points: number = 0;
+  public level: number = 0;
+  public distance: number = 0;
+  public pointsForGround: number = 15;
+  public pointsForWater: number = 25;
+  public timeNoDeath: number = 1000;
+  private timer: undefined | number = undefined;
+  public gameFrame: number = 0;
 
   public background: Background;
   public player: Player;
+  public guns: Guns;
   public control: Control;
   public obstacles: Obstacles;
   public collision: Collision;
   public gui: Gui;
   public vehicles: Vehicles;
   public bulletController: BulletController;
-  public animation: number | undefined;
+  public animation: number | undefined = undefined;
+  public isBlockedCountingPoints: boolean = false;
+  public recoverySpeed: number = 3;
+  public staggerFrames: number = 20;
+  public isPackingCar: boolean = false;
+  public sound: SoundManager;
+  public didYouGetAGift: boolean = false;
 
   constructor(
     gameWidth: number,
@@ -53,22 +65,16 @@ export default class Game {
     this.playerWidth = playerWidth;
     this.maxPlayerArea = this.gameHeight / 2 - this.playerHeight;
     this.minPlayerArea = this.gameHeight - 2 * this.playerHeight;
-    this.pointsForGround = 15;
-    this.pointsForWater = 25;
-    this.points = 0;
-    this.distance = 0;
-    this.level = 0;
-    this.isPause = false;
-    this.isGameplay = false;
-    this.animation = undefined;
-    this.timeNoDeath = 1000;
-    this.timer = undefined;
 
     this.background = new Background(this);
     this.player = new Player(40, 80, this);
     this.control = new Control(this);
     this.collision = new Collision(this);
     this.gui = new Gui(this);
+    this.guns = new Guns(this);
+    this.sound = new SoundManager(
+      audio.find((audio) => audio.type == "soundtrack")!.imgSrc
+    );
 
     this.bulletController = new BulletController(this);
     this.obstacles = new Obstacles(this);
@@ -80,27 +86,59 @@ export default class Game {
   init = () => {
     document.getElementById("container")!.style.width = this.gameWidth + "px";
     document.getElementById("container")!.style.height = this.gameHeight + "px";
+
     this.player.reset();
+    this.guns.refreshGuns();
     this.obstacles.reset();
+    this.vehicles.reset();
     this.points = 0;
     this.distance = 0;
+
     this.level = 0;
     this.isPause = false;
     this.timeNoDeath = 1000;
+    this.timer = undefined;
     this.background?.init();
+    this.gui.refreshGui();
   };
 
   start = () => {
-    this.isGameplay = true;
+    this.isGameplay = false;
+    this.isRecovery = true;
     this.gui!.hideMenu();
-    this.noDeathTimer();
     this.animate();
+    this.vehicles.createTruck();
+  };
+
+  restartGame = () => {
+    this.isGameplay = false;
+    this.isRecovery = true;
+    this.isPackingCar = false;
+    this.player.isDeath = false;
+    this.vehicles.truckRecovery();
+  };
+
+  startDrive = () => {
+    this.sound.restartMusic("soundtrack");
+    this.isGameplay = true;
+    this.isRecovery = false;
+    //this.isPackingCar = false;
+    this.player.isActive = true;
+    this.player.isDeath = false;
+    if (this.timer == undefined) this.noDeathTimer();
+  };
+
+  recovery = () => {
+    this.isGameplay = true; // if gameplay is on and player isActive false background slide
+    this.isRecovery = false;
   };
 
   stop = () => {
+    clearInterval(this.timer);
+    this.sound.stopMusic("soundtrack");
     this.isGameplay = false;
     this.gui.showMenu();
-    clearInterval(this.timer);
+    this.player.previousImage();
     this.init();
   };
 
@@ -108,10 +146,25 @@ export default class Game {
     this.isPause = !this.isPause;
     if (!this.isPause) {
       this.animate();
+      this.sound.restartMusic("soundtrack");
       if (this.timeNoDeath > 0) this.noDeathTimer();
     } else {
       cancelAnimationFrame(this.animation!);
+      this.sound.stopMusic("soundtrack");
       if (this.timeNoDeath > 0) clearInterval(this.timer);
+    }
+  };
+
+  getGift = (type: string) => {
+    if (!this.didYouGetAGift) {
+      if (type == "life") {
+        if (!this.didYouGetAGift) {
+          this.player.addLife();
+        }
+        this.didYouGetAGift = true;
+      } else {
+        this.guns.addGun(type);
+      }
     }
   };
 
@@ -134,33 +187,68 @@ export default class Game {
         this.points += this.pointsForWater;
       this.distance = 0;
 
-      if ((this.points % 20) * this.points == 0) {
-        this.obstacles.generatePuddle();
-      }
+      if (!this.isRecovery) {
+        if ((this.points % 300) * this.points == 0) {
+          this.obstacles.generatePuddle();
+          //this.vehicles.createTruckWithLadder();
+        }
 
-      if ((this.points % 100) * this.points == 0) {
-        this.vehicles.createCivilian();
+        if ((this.points % 255) * this.points == 0) {
+          this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          //this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 510) * this.points == 0) {
+          // this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 750) * this.points == 0) {
+          // this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 800) * this.points == 0) {
+          //this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          this.vehicles.createSpinningEnemy();
+          //this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 1500) * this.points == 0) {
+          //this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          this.vehicles.createHelicopter();
+          //this.vehicles.createTruckWithLadder();
+        }
       }
     }
   };
 
   animate = () => {
-    // console.log(this.player.position);
+    console.log(this.timer + "TIME");
+
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();
-
     this.obstacles.update(); //paddles,grenade etc.
-
-    this.player.draw(this.context);
-    this.player.update();
-
     this.bulletController.draw(this.context);
 
-    this.vehicles.draw(this.context);
-
     this.gui.refreshGui();
-    if (this.isGameplay) {
+    this.vehicles.draw(this.context);
+    this.player.update();
+
+    this.gameFrame++;
+
+    if (this.isGameplay || this.isRecovery) {
       this.animation = requestAnimationFrame(this.animate);
     }
   };

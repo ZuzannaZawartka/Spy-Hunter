@@ -56,10 +56,34 @@ canvas {
 }
 
 #guns-container {
-  height: 10%;
-  width: 1000px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  flex-direction: row-reverse;
+  height: 100%;
+  width: 600px;
   margin: 0;
   padding: 0;
+  gap: 20px;
+}
+#life-container {
+  width: 400px;
+  height: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  flex-direction: row-reverse;
+  margin: 0;
+  padding: 0;
+  gap: 20px;
+}
+
+#stack-container {
+  display: flex;
+  flex-direction: row;
+  height: 10%;
+  justify-content: center;
+  align-items: center;
 }
 
 #root-container {

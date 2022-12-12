@@ -42,10 +42,13 @@ export default class Control {
         this.game.player.isActive
       ) {
         //if game was started
-        console.log(this.game.player.moves);
         this.game.player.addMove(move);
       } else if (action != undefined) {
-        if (action == "START" && this.game.isGameplay == false)
+        if (
+          action == "START" &&
+          this.game.isGameplay == false &&
+          this.game.isRecovery == false
+        )
           this.game.start();
         if (action == "PAUSE") this.game.pause();
       }
