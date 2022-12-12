@@ -77,11 +77,20 @@ export default class Vehicle {
   };
 
   death = () => {
-    //animacje dorobimy ze tak buch robi
+    if (this.type == "truck") {
+      if (!this.game.isPackingCar) this.isActive = false;
+
+      if (this.lastTouch != undefined) {
+        if (this.isCivilian && !this.isEnemy) this.game.player.killedCivile();
+      }
+      this.setFire(1);
+    } else {
+      this.setDeath();
+    }
+  };
+
+  setDeath = () => {
     this.isActive = false;
-    // this.game.vehicles.vehicles = this.game.vehicles.vehicles.filter(
-    //   (vehicle) => vehicle != this
-    // );
 
     if (this.lastTouch != undefined) {
       if (this.isCivilian && !this.isEnemy) this.game.player.killedCivile();
@@ -154,7 +163,7 @@ export default class Vehicle {
           this.game.player.moves.has("UP") ||
           this.game.player.speed >= this.game.player.maxSpeed
         ) {
-          this.speed -= 0.25;
+          this.speed -= 0.2;
         } else if (
           this.game.player.moves.has("DOWN") ||
           this.game.player.speed <= this.game.player.maxSpeed / 4
@@ -163,9 +172,9 @@ export default class Vehicle {
         }
       } else {
         if (this.game.player.speed >= this.game.player.maxSpeed) {
-          this.speed -= 0.2;
+          this.speed -= 0.1;
         } else {
-          this.speed += 0.4;
+          this.speed += 0.3;
         }
       }
       this.position.y -= this.speed / 2;

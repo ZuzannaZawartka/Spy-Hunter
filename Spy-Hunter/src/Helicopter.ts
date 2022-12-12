@@ -11,6 +11,7 @@ export default class Helicopter extends Vehicle {
   isStartedCountingTimeToFlies: boolean;
   isFliesAway: boolean;
   timeToBomb: number;
+  rangeOfBomb: number = 40;
   isStartedCountingTimeToSetBomb: boolean;
 
   constructor(game: Game) {
@@ -19,14 +20,14 @@ export default class Helicopter extends Vehicle {
     this.type = "helicopter";
     this.frameY = 0;
     this.frameX = 0;
-    this.time = 300;
+    this.time = 700;
 
     this.currentTime = 0;
     this.isStartedCountingTimeToFlies = false;
     this.isFliesAway = false;
 
     this.currentTimeBomb = 0;
-    this.timeToBomb = 200;
+    this.timeToBomb = 80;
     this.isStartedCountingTimeToSetBomb = false;
 
     this.create();
@@ -55,11 +56,20 @@ export default class Helicopter extends Vehicle {
 
     if (this.game.gameFrame - this.currentTime >= this.time) {
       this.isFliesAway = true;
+      console.log("ODLOT");
       // set img without bomb
     }
 
     if (this.game.gameFrame - this.currentTimeBomb >= this.timeToBomb) {
-      this.game.obstacles.generateGranade(this.position);
+      let randomx =
+        Math.random() * (this.rangeOfBomb + this.rangeOfBomb) -
+        this.rangeOfBomb;
+      console.log(randomx + "liczba");
+      if (!this.game.player.isDeath)
+        this.game.obstacles.generateGranade({
+          x: this.position.x + randomx,
+          y: this.position.y,
+        });
 
       this.setTimerToSetBomb();
     } else if (

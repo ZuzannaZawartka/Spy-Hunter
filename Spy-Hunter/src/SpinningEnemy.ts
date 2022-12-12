@@ -11,7 +11,7 @@ export default class SpinningEnemy extends Vehicle {
   timeToDrive: number;
   isAttacking: boolean;
   isWating: boolean;
-  pointsForEnemy: number = 500;
+  pointsForEnemy: number = 450;
   constructor(game: Game) {
     super(40, 80, game);
     this.frameX = 0;

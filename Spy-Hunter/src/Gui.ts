@@ -22,6 +22,10 @@ export default class Gui {
 
   refreshLife = (amount: number) => {
     document.getElementById(this.lifeContainer)!.innerHTML = "";
+    if (amount >= 3) {
+      amount = 3;
+      this.game.player.life = 3;
+    }
     for (let i = 0; i < amount; i++) {
       let life = document.createElement("img");
       let config = enemies.find((element) => element.id == 1)!;

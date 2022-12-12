@@ -49,6 +49,7 @@ export default class Player extends Vehicle {
       y: this.game.gameHeight,
     };
     this.speed = 0;
+    this.life = 0;
     this.isActive = true;
     this.beforeMove = true;
     this.previousImage();
@@ -71,8 +72,6 @@ export default class Player extends Vehicle {
   };
 
   death = () => {
-    //animacje dorobimy ze tak buch robi
-
     if (this.game.player.life <= 2 && !this.didYouGetALife) {
       this.didYouGetALife = true;
       this.life--;
@@ -191,6 +190,7 @@ export default class Player extends Vehicle {
 
   addLife = () => {
     this.life++;
+    console.log(this.life + "life");
     this.game.gui.refreshLife(this.life);
   };
 

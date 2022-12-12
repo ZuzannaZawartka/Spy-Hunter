@@ -27,6 +27,8 @@ export default class Guns {
 
   refreshGuns = () => {
     this.gunsArray = [];
+    document.getElementById(this.gunsContainer)!.innerHTML = "";
+
     this.addGun(guns.find((element) => element.id == 0)!.type);
   };
 }

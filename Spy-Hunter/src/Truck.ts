@@ -39,6 +39,7 @@ export default class Truck extends Vehicle {
     this.game.isPackingCar = false;
     this.isUsed = true;
     this.speed = this.maxSpeed / 3;
+    this.game.didYouGetAGift = false;
   };
 
   create = () => {
@@ -48,7 +49,7 @@ export default class Truck extends Vehicle {
     this.position = {
       x: startEndPoints.startPoint!,
 
-      y: this.game.gameHeight,
+      y: this.game.gameHeight - this.size.y / 2,
     };
   };
 
@@ -68,23 +69,23 @@ export default class Truck extends Vehicle {
       if (!this.isUsed) {
         if (this.game.isRecovery == false && this.game.isPackingCar == false) {
           //if (!this.game.isPackingCar) {
-          if (this.position.y < this.game.gameHeight - 300) {
+          if (this.position.y < this.game.gameHeight) {
             if (
               this.game.player.moves.has("UP") ||
               this.game.player.speed >= this.game.player.maxSpeed / 1.5
             ) {
-              this.speed -= 0.15;
+              this.speed -= 0.1;
             } else if (
               this.game.player.moves.has("DOWN") ||
               this.game.player.speed <= this.game.player.maxSpeed / 2
             ) {
-              this.speed += 0.25;
+              this.speed += 0.2;
             }
           } else {
             if (this.game.player.speed >= this.game.player.maxSpeed) {
-              this.speed -= 0.2;
+              this.speed -= 0.1;
             } else {
-              this.speed += 0.4;
+              this.speed += 3;
             }
           }
           this.position.y -= this.speed / 2;
@@ -176,6 +177,10 @@ export default class Truck extends Vehicle {
       } else {
         this.afterCar = true;
       }
+    } else {
+      this.position.x -= Math.abs(this.speed);
+      this.game.player.position.x -= Math.abs(this.speed);
+      this.isReady = true;
     }
   };
 

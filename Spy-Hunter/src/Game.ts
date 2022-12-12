@@ -88,16 +88,18 @@ export default class Game {
     document.getElementById("container")!.style.height = this.gameHeight + "px";
 
     this.player.reset();
+    this.guns.refreshGuns();
     this.obstacles.reset();
     this.vehicles.reset();
     this.points = 0;
     this.distance = 0;
+
     this.level = 0;
     this.isPause = false;
     this.timeNoDeath = 1000;
-
     this.timer = undefined;
     this.background?.init();
+    this.gui.refreshGui();
   };
 
   start = () => {
@@ -123,7 +125,7 @@ export default class Game {
     //this.isPackingCar = false;
     this.player.isActive = true;
     this.player.isDeath = false;
-    this.noDeathTimer();
+    if (this.timer == undefined) this.noDeathTimer();
   };
 
   recovery = () => {
@@ -132,11 +134,11 @@ export default class Game {
   };
 
   stop = () => {
+    clearInterval(this.timer);
     this.sound.stopMusic("soundtrack");
     this.isGameplay = false;
     this.gui.showMenu();
     this.player.previousImage();
-    clearInterval(this.timer);
     this.init();
   };
 
@@ -154,20 +156,15 @@ export default class Game {
   };
 
   getGift = (type: string) => {
-    console.log(this.didYouGetAGift);
     if (!this.didYouGetAGift) {
-      this.didYouGetAGift = true;
       if (type == "life") {
-        console.log("ADDING");
-        this.player.addLife();
+        if (!this.didYouGetAGift) {
+          this.player.addLife();
+        }
+        this.didYouGetAGift = true;
       } else {
         this.guns.addGun(type);
       }
-      this.didYouGetAGift = true;
-
-      setTimeout(() => {
-        this.didYouGetAGift = false;
-      }, 10 * this.timeNoDeath);
     }
   };
 
@@ -193,9 +190,18 @@ export default class Game {
       if (!this.isRecovery) {
         if ((this.points % 300) * this.points == 0) {
           this.obstacles.generatePuddle();
+          //this.vehicles.createTruckWithLadder();
         }
 
         if ((this.points % 255) * this.points == 0) {
+          this.obstacles.generatePuddle();
+          // this.vehicles.createSpinningEnemy();
+          //this.vehicles.createCivilian();
+          // this.vehicles.createCivilian();
+          // this.vehicles.createHelicopter();
+          // this.vehicles.createTruckWithLadder();
+        }
+        if ((this.points % 510) * this.points == 0) {
           // this.obstacles.generatePuddle();
           // this.vehicles.createSpinningEnemy();
           this.vehicles.createCivilian();
@@ -203,7 +209,7 @@ export default class Game {
           // this.vehicles.createHelicopter();
           // this.vehicles.createTruckWithLadder();
         }
-        if ((this.points % 510) * this.points == 0) {
+        if ((this.points % 750) * this.points == 0) {
           // this.obstacles.generatePuddle();
           // this.vehicles.createSpinningEnemy();
           this.vehicles.createCivilian();
@@ -217,7 +223,7 @@ export default class Game {
           this.vehicles.createSpinningEnemy();
           //this.vehicles.createTruckWithLadder();
         }
-        if ((this.points % 1000) * this.points == 0) {
+        if ((this.points % 1500) * this.points == 0) {
           //this.vehicles.createCivilian();
           // this.vehicles.createHelicopter();
           this.vehicles.createHelicopter();
@@ -228,6 +234,8 @@ export default class Game {
   };
 
   animate = () => {
+    console.log(this.timer + "TIME");
+
     this.context?.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
     this.background.draw(this.context);
     this.background.update();

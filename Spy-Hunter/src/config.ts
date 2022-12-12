@@ -3,7 +3,7 @@ const keymap = [
   { action: "DOWN", keys: ["ArrowDown", "s", "S"] },
   { action: "RIGHT", keys: ["ArrowRight", "d", "D"] },
   { action: "LEFT", keys: ["ArrowLeft", "a", "A"] },
-  { action: "SHOOT1", keys: ["a", "A"] },
+  { action: "SHOOT1", keys: ["m", "M"] },
   { action: "SHOOT2", keys: ["z", "Z"] },
 ];
 
