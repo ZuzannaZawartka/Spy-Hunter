@@ -14,7 +14,7 @@ export default class Control {
   findKey = (event: KeyboardEvent) => {
     let action = undefined;
     keymap.forEach((key) => {
-      if (key.keys.includes(event.key)) {
+      if (key.keys.includes(event.code)) {
         action = key.action;
       }
     });
@@ -24,7 +24,7 @@ export default class Control {
   findAction = (event: KeyboardEvent) => {
     let action = undefined;
     keymapAction.forEach((key) => {
-      if (key.keys.includes(event.key)) {
+      if (key.keys.includes(event.code)) {
         action = key.action;
       }
     });
@@ -36,21 +36,25 @@ export default class Control {
     window.addEventListener("keydown", (event) => {
       let move: string | undefined = this.findKey(event); //player movement
       let action: string | undefined = this.findAction(event); //pause and start game
-      if (
-        move != undefined &&
-        this.game.isGameplay &&
-        this.game.player.isActive
-      ) {
-        //if game was started
-        this.game.player.addMove(move);
-      } else if (action != undefined) {
+      if (this.game.isGameplay == false && this.game.isRecovery == false) {
+        this.game.start();
+      } else {
         if (
-          action == "START" &&
-          this.game.isGameplay == false &&
-          this.game.isRecovery == false
-        )
-          this.game.start();
-        if (action == "PAUSE") this.game.pause();
+          move != undefined &&
+          this.game.isGameplay &&
+          this.game.player.isActive
+        ) {
+          //if game was started
+          this.game.player.addMove(move);
+        } else if (action != undefined) {
+          // if (
+          //   action == "START" &&
+          //   this.game.isGameplay == false &&
+          //   this.game.isRecovery == false
+          // )
+          //   this.game.start();
+          if (action == "PAUSE") this.game.pause();
+        }
       }
     });
 

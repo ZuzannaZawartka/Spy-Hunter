@@ -1,14 +1,14 @@
 const keymap = [
-  { action: "UP", keys: ["ArrowUp", "w", "W"] },
-  { action: "DOWN", keys: ["ArrowDown", "s", "S"] },
-  { action: "RIGHT", keys: ["ArrowRight", "d", "D"] },
-  { action: "LEFT", keys: ["ArrowLeft", "a", "A"] },
-  { action: "SHOOT1", keys: ["m", "M"] },
-  { action: "SHOOT2", keys: ["z", "Z"] },
+  { action: "UP", keys: ["ArrowUp", "KeyW"] },
+  { action: "DOWN", keys: ["ArrowDown", "KeyS", "S"] },
+  { action: "RIGHT", keys: ["ArrowRight", "KeyD", "D"] },
+  { action: "LEFT", keys: ["ArrowLeft", "a", "KeyA"] },
+  { action: "SHOOT1", keys: ["Space", "Space"] },
+  { action: "SHOOT2", keys: ["z", "KeyZ"] },
 ];
 
 const keymapAction = [
-  { action: "START", keys: ["Control"] },
+  { action: "START", keys: ["ControlLeft"] },
   { action: "PAUSE", keys: ["Escape"] },
 ];
 
