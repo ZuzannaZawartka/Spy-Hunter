@@ -37,7 +37,7 @@ export default class Player extends Vehicle {
     this.isCivilian = false;
     this.beforeMove = true; // czy wykonał pierwszy ruch
     this.isDeath = false; // czy umarł
-    this.life = 0; // number of live
+    this.life = 1; // number of live
     this.enemyLives = 30; // attack times
     this.isEnemy = false;
     this.resizePLayer();
@@ -74,7 +74,10 @@ export default class Player extends Vehicle {
   death = () => {
     if (this.game.player.life <= 2 && !this.didYouGetALife) {
       this.didYouGetALife = true;
-      this.life--;
+      if (this.game.timeNoDeath <= 0) {
+        console.log(this.life + "ŻYCIA");
+        this.life--;
+      }
     }
 
     this.game.sound.death();
