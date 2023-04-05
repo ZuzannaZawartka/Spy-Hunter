@@ -1,86 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SPY-HUNTER</title>
-  </head>
 
-  <body>
-    <div>
-      <div id="root-container">
-        <div id="menu">
-          <div>
-            <div id="highest-score-container" class="menu-element">
-              <h2>HIGH:</h2>
-              <h2 id="highest-score">0</h2>
-            </div>
-            <div id="title-container" class="menu-element">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPY-HUNTER</title>
+  <style>
+    body {
+      transform: scale(0.65);
+      transform-origin: 0 0;
+      position: absolute;
+      left: 22%;
+    }
+
+    html {
+      height: 100% !important;
+      width: 100% !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div id="root-container">
+      <div id="menu">
+        <div>
+          <div id="highest-score-container" class="menu-element">
+            <h2>HIGH:</h2>
+            <h2 id="highest-score">0</h2>
+          </div>
+          <div id="title-container" class="menu-element">
+            <div>
               <div>
-                <div>
-                  <h1>SPY</h1>
-                  <h1>HUNTER</h1>
-                </div>
+                <h1>SPY</h1>
+                <h1>HUNTER</h1>
               </div>
-            </div>
-            <div id="options-container" class="menu-element">
-              <div>
-                <h2>PRESS</h2>
-                <h2>PRESS</h2>
-              </div>
-              <div>
-                <h2 class="green">START</h2>
-                <h2 class="green">OPTION</h2>
-                <h2>CHANGE</h2>
-              </div>
-              <div>
-                <h2>TO PLAY</h2>
-                <h2>TO</h2>
-                <h2>GAME</h2>
-              </div>
-            </div>
-            <div id="author" class="menu-element">
-              <h3>(C) 1983 Bally Midway</h3>
             </div>
           </div>
-        </div>
-        <div id="game-ui-container">
-          <div id="points-container">
-            <div id="timer"><h1>3293203</h1></div>
-            <div id="points"><h1>12</h1></div>
+          <div id="options-container" class="menu-element">
+            <div>
+              <h2>PRESS</h2>
+              <h2>PRESS</h2>
+            </div>
+            <div>
+              <h2 class="green">START</h2>
+              <h2 class="green">OPTION</h2>
+              <h2>CHANGE</h2>
+            </div>
+            <div>
+              <h2>TO PLAY</h2>
+              <h2>TO</h2>
+              <h2>GAME</h2>
+            </div>
           </div>
-          <div id="container">
-            <canvas id="canvas"></canvas>
-            <img id="backgroundImage" src="./graphics/SpyHunterArea01.png" />
-            <img id="playerImage" src="./graphics/car3.png" />
-          </div>
-          <div id="stack-container">
-            <div id="guns-container"></div>
-            <div id="life-container"></div>
+          <div id="author" class="menu-element">
+            <h3>(C) 1983 Bally Midway</h3>
           </div>
         </div>
       </div>
-      <div id="author" class="menu-element">
-        <div id="main-keymap-container">
-          <div class="keymap-container">
-            <div>
-              <h3>[W]</h3>
-              <h3>[A][S][D]</h3>
-            </div>
-            <div style="align-self: center"><h4>- MOVE</h4></div>
+      <div id="game-ui-container">
+        <div id="points-container">
+          <div id="timer">
+            <h1>3293203</h1>
           </div>
-          <div class="keymap-container">
-            <div>
-              <h3>[SPACE]</h3>
-            </div>
-            <div><h4>- SHOOTING</h4></div>
+          <div id="points">
+            <h1>12</h1>
           </div>
-
-          <h5 style="color: rgb(12, 33, 117)">Recreated by Zuzanna Zawartka</h5>
+        </div>
+        <div id="container">
+          <canvas id="canvas"></canvas>
+          <img id="backgroundImage" src="./graphics/SpyHunterArea01.png" />
+          <img id="playerImage" src="./graphics/car3.png" />
+        </div>
+        <div id="stack-container">
+          <div id="guns-container"></div>
+          <div id="life-container"></div>
         </div>
       </div>
     </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+    <div id="author" class="menu-element">
+      <div id="main-keymap-container">
+        <div class="keymap-container">
+          <div>
+            <h3>[W]</h3>
+            <h3>[A][S][D]</h3>
+          </div>
+          <div style="align-self: center">
+            <h4>- MOVE</h4>
+          </div>
+        </div>
+        <div class="keymap-container">
+          <div>
+            <h3>[SPACE]</h3>
+          </div>
+          <div>
+            <h4>- SHOOTING</h4>
+          </div>
+        </div>
+
+        <h5 style="color: rgb(12, 33, 117)">Recreated by Zuzanna Zawartka</h5>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
