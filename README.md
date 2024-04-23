@@ -74,7 +74,4 @@ Dive into the thrilling world of espionage, navigate challenging obstacles, and 
 
 [Zuzanna Zawartka](https://github.com/ZuzannaZawartka)
 
-## License
-
-This project is licensed under the MIT License.
 
